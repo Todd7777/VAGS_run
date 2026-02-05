@@ -1,0 +1,17 @@
+
+
+# Ce fichier définit les paramètres d’expériences pour ContinueEdit.
+model: flux
+device_number: 0
+strategies:
+  - discrete
+  - smooth
+source_prompt: "A cat sitting on a red chair"
+target_prompts:
+  - "A lion sitting on a red chair"
+  - "A cat sitting on the beach at sunset"
+image_path: ./inputs/cat.png
+steps: 30
+lambda_weight: 0.5
+seed: 42
+output_dir: ./outputs/

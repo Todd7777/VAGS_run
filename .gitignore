@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.venv/
+env/
+outputs/
+Data/Images/
+!Data/flowedit.yaml
+!example_images/

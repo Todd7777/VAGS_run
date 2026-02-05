@@ -1,0 +1,21 @@
+- 
+  input_img: example_images/red_car.png
+  source_prompt: A photo of a red car parked on the street.
+
+  target_prompts:
+  - "A photo of a blue car parked on the street. The car is entirely blue with metallic paint and no trace of red."
+  target_codes:
+  - blue_car
+- 
+  input_img: example_images/lighthouse.png
+  source_prompt: The image features a tall white lighthouse standing prominently
+    on a hill, with a beautiful blue sky in the background. The lighthouse is illuminated
+    by a bright light, making it a prominent landmark in the scene.
+
+  target_prompts:
+  - The image features Big ben clock tower standing prominently
+    on a hill, with a beautiful blue sky in the background. The Big ben clock tower is illuminated
+    by a bright light, making it a prominent landmark in the scene.
+
+  target_codes:
+  - big_ben
