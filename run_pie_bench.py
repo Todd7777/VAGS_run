@@ -5,6 +5,7 @@ import numpy as np
 import csv
 import json
 import pandas as pd
+import random
 from diffusers import StableDiffusion3Img2ImgPipeline
 from diffusers.utils import load_image
 from transformers import CLIPProcessor, CLIPModel
@@ -13,6 +14,17 @@ from torchvision import transforms
 from skimage.metrics import structural_similarity, peak_signal_noise_ratio
 from scipy.ndimage import convolve
 from PIL import Image
+
+def set_seed(seed=42):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+set_seed(42)
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 DTYPE = torch.float16
@@ -23,8 +35,6 @@ OUTPUT_DIR = "outputs/PIE_BENCH_EVAL"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def load_pie_bench():
-    print(f"Loading images from {PIE_BENCH_ROOT}...")
-    
     image_index = {}
     for root, dirs, files in os.walk(PIE_BENCH_ROOT):
         for file in files:
@@ -36,11 +46,9 @@ def load_pie_bench():
         data = json.load(f)
     
     dataset = []
-    
     for key, annotations in data.items():
         src_prompt = annotations.get("original_prompt", "")
         tgt_prompt = annotations.get("editing_prompt", "")
-        
         base_key = os.path.splitext(os.path.basename(key))[0]
         
         if base_key in image_index:
@@ -55,12 +63,10 @@ def load_pie_bench():
                 "target": tgt_prompt
             })
             
-    print(f"Loaded {len(dataset)} items.")
     return dataset
 
 class MetricEvaluator:
     def __init__(self, device):
-        print("Loading CLIP and LPIPS models...")
         self.device = device
         self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14").to(device)
         self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
@@ -71,7 +77,7 @@ class MetricEvaluator:
         inputs = self.clip_processor(text=[prompt], images=image, return_tensors="pt", padding=True).to(self.device)
         with torch.no_grad(): 
             outputs = self.clip_model(**inputs)
-        return outputs.logits_per_image.item()
+        return (outputs.logits_per_image.item() / 100.0) * 100.0
 
     def get_lpips_distance(self, img_source, img_generated):
         t_src = self.to_tensor(img_source).to(self.device) * 2 - 1
@@ -92,8 +98,10 @@ class MetricEvaluator:
         lum_w = np.array([0.299, 0.587, 0.114])
         lum_src = np.dot(src, lum_w)
         lum_gen = np.dot(gen, lum_w)
-        gx_s = convolve(lum_src, kx);  gy_s = convolve(lum_src, kx.T)
-        gx_g = convolve(lum_gen, kx);  gy_g = convolve(lum_gen, kx.T)
+        gx_s = convolve(lum_src, kx)
+        gy_s = convolve(lum_src, kx.T)
+        gx_g = convolve(lum_gen, kx)
+        gy_g = convolve(lum_gen, kx.T)
         grad_src = np.sqrt(gx_s**2 + gy_s**2 + 1e-8)
         grad_gen = np.sqrt(gx_g**2 + gy_g**2 + 1e-8)
         grad_diff = np.abs(grad_src - grad_gen) / (grad_src + grad_gen + 1e-6)
@@ -103,7 +111,6 @@ class MetricEvaluator:
 
 class ComparisonEditor:
     def __init__(self):
-        print("Loading Stable Diffusion 3 Medium pipeline...")
         self.pipe = StableDiffusion3Img2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-3-medium-diffusers",
             torch_dtype=DTYPE
@@ -131,13 +138,16 @@ class ComparisonEditor:
         start_index = int((1.0 - t_start) * steps)
 
         zt = x0_src.clone()
+        generator = torch.Generator(device=DEVICE).manual_seed(42)
 
         for i, t_tensor in enumerate(timesteps):
             if i < start_index: continue
 
             t  = t_tensor.item() / 1000.0
             dt = (timesteps[i+1].item() / 1000.0 if i+1 < len(timesteps) else 0.0) - t
-            noise  = torch.randn_like(x0_src)
+            
+            noise = torch.randn(*x0_src.shape, generator=generator, device=DEVICE, dtype=x0_src.dtype)
+            
             zt_src = (1 - t) * x0_src + t * noise
             zt_tar = zt + zt_src - x0_src
 
@@ -180,33 +190,15 @@ class ComparisonEditor:
         return res_img
 
 def analyze_and_print_results(csv_path):
-    print("\n" + "="*80)
-    print(" PIE-BENCH EVALUATION SUMMARY ")
-    print("="*80)
-    
     try:
         df = pd.read_csv(csv_path)
         metrics = ['CLIP', 'LPIPS', 'MSE_x1e4', 'PSNR_dB', 'SSIM_x100', 'StructDist_x1e3']
-        
         summary = df.groupby('Strategy')[metrics].mean()
-        
-        print("\nGlobal Averages")
         print(summary.round(4).to_string())
-        
-        if 'Baseline' in summary.index:
-            print("\nDifference vs Baseline")
-            baseline_vals = summary.loc['Baseline']
-            delta = summary - baseline_vals
-            formatted_delta = delta.map(lambda x: f"{x:+.4f}" if pd.notnull(x) else "NaN")
-            formatted_delta = formatted_delta.drop('Baseline', errors='ignore') 
-            print(formatted_delta.to_string())
-            
         summary_path = csv_path.replace(".csv", "_summary.csv")
         summary.to_csv(summary_path)
-        print(f"\nSaved summary to {summary_path}")
-            
     except Exception as e:
-        print(f"Error analyzing results: {e}")
+        pass
 
 if __name__ == "__main__":
     torch.cuda.empty_cache()
@@ -217,10 +209,7 @@ if __name__ == "__main__":
     evaluator = MetricEvaluator(DEVICE)
 
     STRATEGIES = ["Baseline", "Exponential_CAG"]
-    
     MAX_IMAGES = len(DATASET)
-
-    print(f"\nStarting evaluation...")
 
     csv_path = os.path.join(OUTPUT_DIR, "pie_bench_results.csv")
     fieldnames = ['Image', 'Category', 'Strategy', 'CLIP', 'LPIPS', 'MSE_x1e4', 'PSNR_dB', 'SSIM_x100', 'StructDist_x1e3', 'Filename']
@@ -236,10 +225,8 @@ if __name__ == "__main__":
             full_path = item["full_path"]
 
             if not os.path.exists(full_path):
-                print(f"Skipping missing image: {full_path}")
                 continue
 
-            print(f"\nProcessing [{idx+1}/{min(MAX_IMAGES, len(DATASET))}]: {item['base_name']}...")
             init_img  = load_image(full_path).resize((1024, 1024))
             base_name = item["base_name"]
             tgt_prompt = item["target"]
@@ -251,8 +238,6 @@ if __name__ == "__main__":
                 clip_s = evaluator.get_clip_score(res_img, tgt_prompt)
                 lpips_d = evaluator.get_lpips_distance(init_img, res_img)
                 mse, psnr, ssim, struct_dist = evaluator.get_structural_metrics(init_img, res_img)
-
-                print(f"[{strat:15s}] CLIP: {clip_s:.2f} | LPIPS: {lpips_d:.2f} | MSE: {mse:.2f} | PSNR: {psnr:.2f} | SSIM: {ssim:.2f} | SDist: {struct_dist:.2f}")
 
                 fname = f"{base_name}_{strat}.jpg"
                 res_img.save(os.path.join(OUTPUT_DIR, fname))
@@ -275,6 +260,4 @@ if __name__ == "__main__":
                 torch.cuda.empty_cache()
                 gc.collect()
 
-    print(f"\nEvaluation complete.")
-    
     analyze_and_print_results(csv_path)

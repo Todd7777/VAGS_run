@@ -12,7 +12,6 @@ from skimage.metrics import structural_similarity, peak_signal_noise_ratio
 from scipy.ndimage import convolve
 from PIL import Image
 
-# ==================== CONFIGURATION ====================
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 DTYPE = torch.float16
@@ -21,7 +20,6 @@ INPUT_ROOT = "Data/Images"
 OUTPUT_DIR = "outputs/MINI_BATCH_NEW_STRATEGIES"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# ==================== DATASET (15 images variées) ====================
 DATASET = [
     {
         "filename": "bear.png",
@@ -140,10 +138,8 @@ DATASET = [
     }
 ]
 
-# ==================== EVALUATEUR ====================
 class MetricEvaluator:
     def __init__(self, device):
-        print("[METRICS] Loading CLIP & LPIPS...")
         self.device = device
         self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-large-patch14").to(device)
         self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-large-patch14")
@@ -152,20 +148,22 @@ class MetricEvaluator:
 
     def get_clip_score(self, image, prompt):
         inputs = self.clip_processor(text=[prompt], images=image, return_tensors="pt", padding=True).to(self.device)
-        with torch.no_grad(): outputs = self.clip_model(**inputs)
+        with torch.no_grad(): 
+            outputs = self.clip_model(**inputs)
         return outputs.logits_per_image.item() / 100.0
 
     def get_lpips_distance(self, img_source, img_generated):
         t_src = self.to_tensor(img_source).to(self.device) * 2 - 1
         t_gen = self.to_tensor(img_generated).to(self.device) * 2 - 1
-        with torch.no_grad(): dist = self.lpips_loss(t_src.unsqueeze(0), t_gen.unsqueeze(0))
+        with torch.no_grad(): 
+            dist = self.lpips_loss(t_src.unsqueeze(0), t_gen.unsqueeze(0))
         return dist.item()
 
     def get_structural_metrics(self, img_source, img_generated):
         src = np.array(img_source.resize((512, 512))).astype(np.float32) / 255.0
         gen = np.array(img_generated.resize((512, 512))).astype(np.float32) / 255.0
 
-        mse = float(np.mean((src - gen) ** 2)) * 1e4
+        mse = float(np.mean((src - gen) ** 2)) * 10000.0
         psnr = float(peak_signal_noise_ratio(src, gen, data_range=1.0))
         ssim = float(structural_similarity(src, gen, data_range=1.0, channel_axis=2, win_size=7)) * 100.0
 
@@ -173,19 +171,19 @@ class MetricEvaluator:
         lum_w = np.array([0.299, 0.587, 0.114])
         lum_src = np.dot(src, lum_w)
         lum_gen = np.dot(gen, lum_w)
-        gx_s = convolve(lum_src, kx);  gy_s = convolve(lum_src, kx.T)
-        gx_g = convolve(lum_gen, kx);  gy_g = convolve(lum_gen, kx.T)
+        gx_s = convolve(lum_src, kx)
+        gy_s = convolve(lum_src, kx.T)
+        gx_g = convolve(lum_gen, kx)
+        gy_g = convolve(lum_gen, kx.T)
         grad_src = np.sqrt(gx_s**2 + gy_s**2 + 1e-8)
         grad_gen = np.sqrt(gx_g**2 + gy_g**2 + 1e-8)
         grad_diff = np.abs(grad_src - grad_gen) / (grad_src + grad_gen + 1e-6)
-        struct_dist = float(np.mean(grad_diff)) * 1e3
+        struct_dist = float(np.mean(grad_diff)) * 1000.0
 
         return mse, psnr, ssim, struct_dist
 
-# ==================== MOTEUR DE COMPARAISON ====================
 class ComparisonEditor:
     def __init__(self):
-        print(f"[INIT] Loading SD3 Pipeline...")
         self.pipe = StableDiffusion3Img2ImgPipeline.from_pretrained(
             "stabilityai/stable-diffusion-3-medium-diffusers",
             torch_dtype=DTYPE
@@ -205,7 +203,6 @@ class ComparisonEditor:
         t_start  = 0.85
         base_cfg = 7.5
         
-        # Hyperparametres optimisés trouvés précédemment
         kappa    = 4.0
         m        = 3.0
 
@@ -217,7 +214,8 @@ class ComparisonEditor:
         zt = x0_src.clone()
 
         for i, t_tensor in enumerate(timesteps):
-            if i < start_index: continue
+            if i < start_index: 
+                continue
 
             t  = t_tensor.item() / 1000.0
             dt = (timesteps[i+1].item() / 1000.0 if i+1 < len(timesteps) else 0.0) - t
@@ -238,7 +236,7 @@ class ComparisonEditor:
             )[0]
 
             vu_s, vc_s, vu_t, vc_t = noise_pred.chunk(4)
-            current_lambda = base_cfg  # Baseline
+            current_lambda = base_cfg 
 
             diff = vc_t - vc_s
             norm_diff = torch.norm(diff, p=2, dim=(1,2,3)).mean().item()
@@ -247,29 +245,21 @@ class ComparisonEditor:
             conflict_score = np.tanh(relative_conflict / m)
 
             if strategy == "Exponential_CAG":
-                # Ta méthode optimale (Time-Aware Correct)
                 progress = (t_start - t) / t_start
                 sigma = 1 / (1 + np.exp(-12 * (progress - 0.5)))
-                control_term = 2 * sigma - 1 # Va de -1 (suppress) à +1 (boost)
+                control_term = 2 * sigma - 1 
                 modulation = np.exp(kappa * control_term * conflict_score)
                 current_lambda = base_cfg * modulation
 
             elif strategy == "Bidirectional_U_Shape":
-                # Nouvelle méthode (U-shape) : On booste si le conflit est très faible OU très fort
-                # On utilise une parabole centrée sur 0.5. 
-                # Si conflict_score = 0 -> (2*0-1)^2 = 1 (Boost max)
-                # Si conflict_score = 0.5 -> (2*0.5-1)^2 = 0 (Pas de boost)
-                # Si conflict_score = 1 -> (2*1-1)^2 = 1 (Boost max)
                 kappa_u = 2.0
                 u_factor = (2 * conflict_score - 1)**2 
                 current_lambda = base_cfg * (1 + kappa_u * u_factor)
 
             elif strategy == "Anti_CAG":
-                # Le Jumeau Maléfique : Inverse la logique temporelle
-                # Booste au début (quand c'est du bruit) et supprime à la fin
                 progress = (t_start - t) / t_start
                 sigma = 1 / (1 + np.exp(-12 * (progress - 0.5)))
-                anti_control_term = 1 - 2 * sigma # Inverse : Va de +1 (boost) à -1 (suppress)
+                anti_control_term = 1 - 2 * sigma 
                 modulation = np.exp(kappa * anti_control_term * conflict_score)
                 current_lambda = base_cfg * modulation
 
@@ -283,48 +273,35 @@ class ComparisonEditor:
         res_img = self.pipe.image_processor.postprocess(image, output_type="pil")[0]
         return res_img
 
-# ==================== STATISTIQUES ====================
 def analyze_and_print_results(csv_path):
-    print("\n" + "="*70)
-    print(" 📊 STATISTICAL ANALYSIS: NEW ABLATION STUDY ")
-    print("="*70)
-    
     try:
         df = pd.read_csv(csv_path)
         metrics = ['CLIP', 'LPIPS', 'MSE_x1e4', 'PSNR_dB', 'SSIM_x100', 'StructDist_x1e3']
         
         summary = df.groupby('Strategy')[metrics].mean()
         
-        print("\n--- MOYENNES GLOBALES (MEAN METRICS) ---")
         print(summary.round(4).to_string())
         
         if 'Baseline' in summary.index:
-            print("\n--- DIFFERENCE VS BASELINE (Δ) ---")
-            print("Note: Négatif = Mieux pour LPIPS, MSE, StructDist | Positif = Mieux pour CLIP, PSNR, SSIM")
             baseline_vals = summary.loc['Baseline']
             delta = summary - baseline_vals
             
-            # Formater avec map pour éviter le warning Pandas
             formatted_delta = delta.map(lambda x: f"{x:+.4f}" if pd.notnull(x) else "NaN")
             formatted_delta = formatted_delta.drop('Baseline') 
             print(formatted_delta.to_string())
             
             summary_path = csv_path.replace(".csv", "_summary.csv")
             summary.to_csv(summary_path)
-            print(f"\n[SAVED] Résumé statistique sauvegardé dans : {summary_path}")
             
     except Exception as e:
-        print(f"[ERREUR] Impossible d'analyser les résultats : {e}")
+        pass
 
-# ==================== MAIN ====================
 if __name__ == "__main__":
     editor    = ComparisonEditor()
     evaluator = MetricEvaluator(DEVICE)
 
     STRATEGIES = ["Baseline", "Exponential_CAG", "Bidirectional_U_Shape", "Anti_CAG"]
     MAX_IMAGES = 15
-
-    print(f"[START] Mini-Benchmark (Baseline vs U-Shape vs Anti-CAG)...")
 
     csv_path = os.path.join(OUTPUT_DIR, "mini_batch_results.csv")
     fieldnames = ['Image', 'Target', 'Strategy', 'CLIP', 'LPIPS', 'MSE_x1e4', 'PSNR_dB', 'SSIM_x100', 'StructDist_x1e3', 'Filename']
@@ -345,15 +322,12 @@ if __name__ == "__main__":
                 if os.path.exists(full_path_alt):
                     full_path = full_path_alt
                 else:
-                    print(f"[SKIP] Image introuvable : {item['filename']}")
                     continue
 
-            print(f"\nProcessing [{idx+1}/{MAX_IMAGES}]: {filename_clean}...")
             init_img  = load_image(full_path).resize((1024, 1024))
             base_name = os.path.splitext(filename_clean)[0]
 
             for tgt_prompt, code in item["targets"]:
-                print(f"   -> Target: {code}")
                 for strat in STRATEGIES:
                     
                     res_img = editor.process(init_img, item["source"], tgt_prompt, strat)
@@ -361,8 +335,6 @@ if __name__ == "__main__":
                     clip_s = evaluator.get_clip_score(res_img, tgt_prompt)
                     lpips_d = evaluator.get_lpips_distance(init_img, res_img)
                     mse, psnr, ssim, struct_dist = evaluator.get_structural_metrics(init_img, res_img)
-
-                    print(f"      [{strat:22s}]  CLIP: {clip_s:.4f} | LPIPS: {lpips_d:.4f} | MSE: {mse:.2f}")
 
                     fname = f"{base_name}_{code}_{strat}.jpg"
                     res_img.save(os.path.join(OUTPUT_DIR, fname))
@@ -381,7 +353,5 @@ if __name__ == "__main__":
                     })
                     csv_file.flush()
                     torch.cuda.empty_cache()
-
-    print(f"\n[DONE] Génération des images terminée.")
     
     analyze_and_print_results(csv_path)

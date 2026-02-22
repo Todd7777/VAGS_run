@@ -155,9 +155,9 @@ if __name__ == "__main__":
     keys, values = zip(*GRID_PARAMS.items())
     combinations = [dict(zip(keys, v)) for v in itertools.product(*values)]
     
-    print(f"[START] Etude Paramétrique Wang : {len(combinations)} configurations.")
+    print(f"[START] Etude Paramétrique  : {len(combinations)} configurations.")
     
-    csv_path = os.path.join(OUTPUT_DIR, "wang_optimization_results.csv")
+    csv_path = os.path.join(OUTPUT_DIR, "exp_optimization_results.csv")
     with open(csv_path, mode='w', newline='') as csv_file:
         fieldnames = ['kappa', 'm', 't_start', 'CLIP', 'LPIPS', 'Filename']
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
