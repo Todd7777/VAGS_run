@@ -1,34 +1,36 @@
-# Hybrid FlowEdit: Conflict-Aware Dynamic Guidance
+# Exponential Conflict-Aware Guidance for Diffusion-Based Image Editing
 
-This repository contains the research implementation for "Hybrid FlowEdit", an extension of the original FlowEdit method (Stable Diffusion 3) aimed at solving the structure-editability tradeoff.
+This repository contains the research implementation for Exponential Conflict-Aware Guidance (CAG), an advanced modulation framework for diffusion-based image editing using Stable Diffusion 3 and Stable Diffusion 3.5. It resolves the structural-editability tradeoff by dynamically scaling Classifier-Free Guidance (CFG) based on the instantaneous velocity conflict between source and target generation trajectories.
 
 ## Project Overview
 
-Standard editing methods use a constant Classifier-Free Guidance (CFG) scale, which often leads to a dilemma: either the structure is preserved but the edit is weak, or the edit is strong but the structure collapses.
+Standard editing methods utilize a constant guidance scale, which forces a compromise: lower scales preserve the original image structure but fail to apply the edit, while higher scales enforce the edit but destroy the background and structural integrity. 
 
-This project introduces two novel guidance strategies based on the analysis of the velocity field difference ($\Delta v$) between source and target trajectories.
+This project introduces a relative conflict metric $s$ to measure the deviation between the target velocity field $v_{t}$ and the source velocity field $v_{s}$:
+
+$$s = \frac{\| v_{t} - v_{s} \|_2}{\| v_{s} \|_2 + \epsilon}$$
+
+Using this metric, we implement two novel exponential modulation strategies to dynamically adjust the guidance weight $w$ during the reverse diffusion process.
 
 ## Implemented Strategies
 
-### 1. Late-Start Heuristic (Temporal Anchoring)
-This method enforces structural preservation by anchoring the generation to the source prompt during the high-noise phase.
+### 1. Time-Agnostic Exponential Decrease
+A purely conflict-driven formulation that penalizes guidance when the velocity conflict is high, preventing structural collapse in high-deviation regions.
 
-* **Mechanism:** The source prompt is strictly used for the first 20% of the denoising process ($t=0.9 \to 0.72$). The target prompt is injected only after this structural anchor is established.
-* **Performance:** Achieves State-of-the-Art structural fidelity (LPIPS ~0.160) while maintaining high semantic alignment (CLIP ~0.346).
-* **Script:** `run_late_start_benchmark.py`
+* **Mechanism:** The base CFG is multiplied by an exponentially decaying factor controlled by the conflict score, bounded by a hyperbolic tangent to prevent numerical instability.
+* **Formulation:** $$w = w_{base} \cdot \exp(-\kappa \tanh(s/m))$$
+* **Hyperparameters:** $\kappa = 4.0$ (exponential scale), $m = 3.0$ (conflict sensitivity threshold).
 
-### 2. Sign Flip Controller (Dynamic Piecewise Guidance)
-This method implements a mathematical "Piecewise Control Policy" based on the Normalized Relative Conflict metric $s(t)$.
+### 2. Time-Aware Exponential CAG (Gated)
+A temporal formulation that recognizes the changing role of noise across the diffusion process. It suppresses guidance during early structural formation and boosts it during late semantic refinement.
 
-$$s(t) = \frac{\| v_{tgt} - v_{src} \|}{\| v_{src} \| + \epsilon}$$
+* **Mechanism:** Integrates a sigmoidal temporal gate $\sigma(t)$ that smoothly transitions from early steps to late steps.
+* **Formulation:**
+$$w(t) = w_{base} \cdot \exp(\kappa \cdot (2\sigma(t) - 1) \cdot \tanh(s/m))$$
+* **Performance:** Surpasses current State-of-the-Art methods on PIE-Bench by maintaining strict background preservation while maximizing text alignment.
 
-The guidance scale $w(t)$ is modulated dynamically:
-* **Early Stage:** Inverse relationship. High conflict implies noise -> Guidance is suppressed to protect structure.
-* **Late Stage:** Proportional relationship. High conflict implies semantic edit -> Guidance is boosted to force the edit.
-* **Script:** `run_sign_flip_optimization.py`
-
-## Installation & Usage
-
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
+### 3. State-of-the-Art Baseline Alignment
+The codebase strictly aligns with the exact flow inversion protocols from recent literature to ensure direct comparability:
+* Target CFG: 13.5
+* Source CFG: 3.5
+* Generation Start Time: $t_{start} = 0.66$
