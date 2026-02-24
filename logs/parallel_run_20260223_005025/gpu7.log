@@ -1,0 +1,108 @@
+[GPU 7] Chunk 6/7 — 100 images (600→699)
+[GPU 7] Chargement SD3-medium sur cuda:0 (visible=7) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:02,  2.70it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  9.85it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  9.82it/s]
+Loading pipeline components...:  33%|███▎      | 3/9 [00:00<00:01,  4.92it/s]Loading pipeline components...:  44%|████▍     | 4/9 [00:00<00:00,  5.46it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  89%|████████▉ | 8/9 [00:01<00:00,  9.96it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.32it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 7] [1/100]  823000000000  (3_indoor)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  28.47 |  0.850 | 22.73 | 89.02 |  170.3 |   53.3 |  247.5
+  Exp_Forward_Gate       |  12.6 |  28.94 |  0.848 | 22.78 | 87.16 |  200.9 |   52.7 |  270.3
+  Exp_Forward            |  14.0 |  29.99 |  0.843 | 23.01 | 88.52 |  185.7 |   50.0 |  261.7
+  Exp_Reverse_Gate       |  15.5 |  28.90 |  0.885 | 21.11 | 84.96 |  193.5 |   77.4 |  263.1
+  Exp_Boost              |  12.5 |  31.44 |  0.846 | 24.04 | 89.83 |  177.7 |   39.4 |  254.5
+  TwoPhase               |  12.8 |  29.59 |  0.840 | 23.27 | 89.66 |  176.6 |   47.1 |  251.6
+  Entropy                |  12.6 |  30.51 |  0.835 | 22.78 | 88.74 |  183.2 |   52.7 |  256.6
+  Locality               |  12.6 |  29.80 |  0.879 | 23.21 | 88.89 |  177.8 |   47.8 |  257.1
+  Dual                   |   3.3 |  26.69 |  0.978 | 31.06 | 96.07 |   78.9 |    7.8 |  187.0
+  Quantile               |  13.1 |  30.73 |  0.851 | 22.54 | 87.27 |  240.8 |   55.7 |  303.7
+  Budget_Matched         |  13.0 |  29.98 |  0.845 | 23.39 | 88.19 |  186.1 |   45.8 |  259.8
+  → image traitée en 150s (14s/stratégie)
+
+[GPU 7] [2/100]  823000000001  (3_indoor)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  22.63 |  0.984 | 22.63 | 83.87 |  187.3 |   54.6 |  209.1
+  Exp_Forward_Gate       |  12.7 |  22.31 |  0.989 | 23.79 | 86.92 |  161.4 |   41.8 |  189.5
+  Exp_Forward            |  13.9 |  22.62 |  0.986 | 22.37 | 83.97 |  196.4 |   57.9 |  209.6
+  Exp_Reverse_Gate       |  15.4 |  23.47 |  0.980 | 21.06 | 79.81 |  216.0 |   78.3 |  234.3
+  Exp_Boost              |  12.6 |  22.39 |  0.986 | 23.98 | 87.17 |  162.0 |   40.0 |  185.1
+  TwoPhase               |  12.7 |  23.15 |  0.984 | 22.90 | 84.70 |  186.1 |   51.2 |  204.6
+  Entropy                |  12.6 |  23.16 |  0.985 | 23.49 | 85.99 |  172.1 |   44.8 |  197.6
+  Locality               |  12.8 |  22.51 |  0.988 | 24.49 | 87.93 |  160.7 |   35.6 |  185.8
+  Dual                   |   3.1 |  22.82 |  0.993 | 30.98 | 96.07 |   63.0 |    8.0 |   93.8
+  Quantile               |  12.0 |  21.91 |  0.986 | 24.78 | 88.24 |  179.5 |   33.2 |  184.5
+  Budget_Matched         |  13.0 |  23.07 |  0.991 | 23.74 | 86.84 |  161.5 |   42.3 |  190.4
+  → image traitée en 156s (14s/stratégie)
+
+[GPU 7] [3/100]  823000000002  (3_indoor)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  24.85 |  0.948 | 21.78 | 81.60 |  274.1 |   66.4 |  304.3
+  Exp_Forward_Gate       |  12.7 |  26.58 |  0.955 | 22.92 | 84.31 |  261.6 |   51.1 |  290.2
+  Exp_Forward            |  14.1 |  25.57 |  0.948 | 22.38 | 83.02 |  282.1 |   57.8 |  301.7
+  Exp_Reverse_Gate       |  15.7 |  25.42 |  0.947 | 20.73 | 80.39 |  299.1 |   84.4 |  312.2
+  Exp_Boost              |  12.6 |  27.21 |  0.953 | 23.00 | 84.75 |  269.6 |   50.1 |  289.3
+  TwoPhase               |  12.9 |  25.62 |  0.947 | 23.48 | 84.39 |  270.2 |   44.8 |  292.4
+  Entropy                |  12.7 |  26.26 |  0.955 | 22.99 | 83.62 |  258.6 |   50.3 |  292.9
+  Locality               |  12.7 |  26.40 |  0.951 | 23.24 | 84.19 |  268.5 |   47.4 |  294.5
+  Dual                   |   3.3 |  26.97 |  0.986 | 30.93 | 92.97 |  101.9 |    8.1 |  188.4
+  Quantile               |  13.0 |  25.44 |  0.952 | 21.84 | 80.81 |  340.8 |   65.4 |  338.2
+  Budget_Matched         |  12.9 |  26.29 |  0.955 | 22.67 | 83.57 |  257.1 |   54.1 |  291.5
+  → image traitée en 156s (14s/stratégie)
+
+[GPU 7] [4/100]  823000000003  (3_indoor)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  29.79 |  0.903 | 21.88 | 81.77 |  305.6 |   64.8 |  301.5
+  Exp_Forward_Gate       |  12.7 |  24.89 |  0.952 | 24.12 | 87.45 |  261.3 |   38.7 |  275.2
+  Exp_Forward            |  14.1 |  24.83 |  0.943 | 22.43 | 82.28 |  300.5 |   57.2 |  299.2
+  Exp_Reverse_Gate       |  15.9 |  31.87 |  0.882 | 20.82 | 79.42 |  323.1 |   82.7 |  314.0
+  Exp_Boost              |  12.6 |  25.88 |  0.947 | 23.91 | 86.57 |  267.7 |   40.7 |  277.2
+  TwoPhase               |  12.8 |  23.79 |  0.945 | 23.02 | 85.21 |  278.2 |   49.9 |  278.5
+  Entropy                |  12.7 |  24.43 |  0.919 | 23.19 | 85.40 |  278.7 |   48.0 |  278.7
+  Locality               |  12.7 |  24.70 |  0.939 | 23.51 | 86.14 |  276.7 |   44.6 |  280.2
+  Dual                   |   3.2 |  19.41 |  0.978 | 35.22 | 98.16 |   75.0 |    3.0 |  130.7
+  Quantile               |  12.6 |  25.19 |  0.878 | 24.01 | 87.51 |  278.7 |   39.7 |  284.7
+  Budget_Matched         |  13.0 |  27.15 |  0.922 | 23.35 | 85.05 |  278.4 |   46.2 |  284.2
+  → image traitée en 156s (14s/stratégie)
+
+[GPU 7] [5/100]  823000000004  (3_indoor)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  22.33 |  0.968 | 22.66 | 85.89 |  205.5 |   54.2 |  246.6
+  Exp_Forward_Gate       |  12.5 |  21.88 |  0.972 | 23.07 | 86.23 |  202.3 |   49.4 |  239.7
+  Exp_Forward            |  13.9 |  21.28 |  0.965 | 22.73 | 86.08 |  213.6 |   53.3 |  245.1
+  Exp_Reverse_Gate       |  15.8 |  22.48 |  0.949 | 20.54 | 81.30 |  245.8 |   88.3 |  273.7
+  Exp_Boost              |  12.3 |  23.21 |  0.973 | 23.62 | 87.96 |  197.8 |   43.5 |  230.0
+  TwoPhase               |  12.7 |  22.85 |  0.966 | 22.98 | 85.91 |  211.2 |   50.3 |  244.8
+  Entropy                |  12.4 |  21.34 |  0.966 | 23.13 | 86.53 |  207.3 |   48.6 |  240.0
+  Locality               |  12.5 |  21.83 |  0.966 | 23.43 | 86.77 |  205.9 |   45.4 |  241.5
+  Dual                   |   3.3 |  21.59 |  0.978 | 29.89 | 96.66 |   78.5 |   10.3 |  139.0
+  Quantile               |  12.1 |  22.64 |  0.953 | 23.87 | 88.38 |  220.1 |   41.0 |  236.7
+  Budget_Matched         |  12.8 |  22.03 |  0.967 | 22.47 | 85.54 |  214.5 |   56.6 |  246.4
+  → image traitée en 155s (14s/stratégie)
+
+[GPU 7] [6/100]  823000000005  (3_indoor)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  23.52 |  0.966 | 19.64 | 80.43 |  261.1 |  108.7 |  231.3
+  Exp_Forward_Gate       |  12.6 |  22.59 |  0.978 | 20.91 | 84.50 |  226.3 |   81.0 |  207.7
+  Exp_Forward            |  14.1 |  23.25 |  0.967 | 20.01 | 81.13 |  260.9 |   99.8 |  226.5
+  Exp_Reverse_Gate       |  15.8 |  24.10 |  0.963 | 18.39 | 76.66 |  295.0 |  144.8 |  255.2
+  Exp_Boost              |  12.5 |  22.49 |  0.977 | 21.07 | 84.64 |  226.0 |   78.2 |  208.1
+  TwoPhase               |  12.7 |  22.64 |  0.970 | 20.37 | 82.33 |  242.6 |   91.9 |  217.7
+  Entropy                |  12.5 |  23.60 |  0.977 | 20.82 | 83.64 |  233.3 |   82.9 |  211.1
+  Locality               |  12.5 |  23.26 |  0.978 | 20.88 | 84.40 |  224.8 |   81.6 |  209.4
+  Dual                   |   3.2 |  20.47 |  0.986 | 28.31 | 95.24 |   95.0 |   14.8 |  122.7
+  Quantile               |  11.8 |  21.23 |  0.987 | 22.69 | 87.70 |  215.8 |   53.8 |  194.5

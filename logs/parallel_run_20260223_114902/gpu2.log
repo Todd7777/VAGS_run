@@ -1,0 +1,75 @@
+[GPU 2] Chunk 1/7 — 100 images (100→199)
+[GPU 2] Chargement SD3-medium (visible=2) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  22%|██▏       | 2/9 [00:00<00:01,  5.77it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 12.41it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 12.38it/s]
+Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  8.38it/s]Loading pipeline components...:  67%|██████▋   | 6/9 [00:00<00:00,  7.34it/s]Loading pipeline components...:  89%|████████▉ | 8/9 [00:00<00:00,  8.96it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.94it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 2] [1/100]  000000000100  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  29.22 |  0.949 | 24.86 | 92.90 |  159.0 |   32.7 |  249.1
+  Exp_Forward_Gate       |  12.9 |  29.66 |  0.929 | 25.66 | 93.84 |  157.1 |   27.2 |  255.1
+  Exp_Forward            |  14.0 |  29.34 |  0.948 | 26.04 | 93.69 |  157.5 |   24.9 |  254.4
+  Exp_Reverse_Gate       |  14.7 |  28.52 |  0.940 | 24.06 | 92.33 |  158.8 |   39.2 |  251.2
+  Exp_Boost              |  12.8 |  28.25 |  0.938 | 25.93 | 93.82 |  159.0 |   25.5 |  261.3
+  TwoPhase               |  13.2 |  28.63 |  0.949 | 26.81 | 94.11 |  157.4 |   20.8 |  249.8
+  Entropy                |  12.9 |  28.74 |  0.944 | 25.82 | 93.97 |  166.9 |   26.2 |  256.0
+  Locality               |  13.0 |  28.55 |  0.953 | 25.77 | 93.89 |  162.5 |   26.5 |  255.6
+  Dual                   |   3.2 |  27.85 |  0.985 | 35.78 | 98.36 |   64.8 |    2.6 |  187.9
+  Quantile               |  12.1 |  31.26 |  0.858 | 27.67 | 93.70 |  194.0 |   17.1 |  286.5
+  Budget_Matched         |  13.2 |  29.03 |  0.960 | 25.78 | 93.71 |  152.5 |   26.5 |  248.4
+  → 169s (15s/stratégie)
+
+[GPU 2] [2/100]  000000000101  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  21.79 |  0.947 | 19.75 | 84.03 |  240.1 |  106.0 |  247.7
+  Exp_Forward_Gate       |  12.1 |  21.57 |  0.957 | 20.68 | 85.76 |  224.9 |   85.5 |  238.4
+  Exp_Forward            |  13.9 |  21.58 |  0.951 | 20.19 | 84.30 |  239.6 |   95.6 |  249.6
+  Exp_Reverse_Gate       |  17.0 |  21.72 |  0.931 | 18.16 | 78.73 |  287.5 |  152.7 |  281.4
+  Exp_Boost              |  12.0 |  21.36 |  0.958 | 21.73 | 87.63 |  215.7 |   67.1 |  233.1
+  TwoPhase               |  12.3 |  21.95 |  0.951 | 20.54 | 85.65 |  230.4 |   88.3 |  241.8
+  Entropy                |  12.1 |  22.08 |  0.957 | 20.68 | 86.37 |  216.6 |   85.5 |  233.6
+  Locality               |  12.1 |  21.68 |  0.961 | 20.70 | 86.02 |  224.7 |   85.0 |  238.5
+  Dual                   |   3.2 |  18.28 |  0.983 | 31.11 | 96.57 |   73.2 |    7.7 |  124.1
+  Quantile               |  11.1 |  20.01 |  0.975 | 21.93 | 87.37 |  226.8 |   64.1 |  244.2
+  Budget_Matched         |  12.6 |  21.03 |  0.962 | 20.19 | 85.01 |  223.5 |   95.8 |  240.2
+  → 185s (17s/stratégie)
+
+[GPU 2] [3/100]  000000000102  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  24.74 |  0.926 | 23.65 | 89.16 |  195.8 |   43.1 |  250.1
+  Exp_Forward_Gate       |  12.7 |  23.93 |  0.950 | 25.13 | 91.30 |  175.1 |   30.7 |  235.7
+  Exp_Forward            |  13.9 |  23.71 |  0.917 | 24.39 | 90.11 |  193.9 |   36.4 |  252.8
+  Exp_Reverse_Gate       |  15.4 |  24.46 |  0.901 | 22.97 | 87.38 |  211.7 |   50.5 |  259.2
+  Exp_Boost              |  12.6 |  24.41 |  0.935 | 25.48 | 92.08 |  166.5 |   28.3 |  235.1
+  TwoPhase               |  12.8 |  24.37 |  0.929 | 24.67 | 91.13 |  177.6 |   34.1 |  241.1
+  Entropy                |  12.7 |  23.77 |  0.938 | 24.89 | 91.43 |  177.1 |   32.4 |  239.5
+  Locality               |  12.7 |  24.15 |  0.942 | 25.10 | 91.41 |  172.0 |   30.9 |  238.4
+  Dual                   |   3.1 |  20.06 |  0.981 | 34.97 | 98.54 |   49.1 |    3.2 |  134.3
+  Quantile               |  12.2 |  23.52 |  0.942 | 26.60 | 92.87 |  183.3 |   21.9 |  254.6
+  Budget_Matched         |  13.0 |  24.18 |  0.943 | 24.68 | 90.83 |  180.7 |   34.1 |  237.6
+  → 186s (17s/stratégie)
+
+[GPU 2] [4/100]  000000000103  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  27.56 |  0.889 | 23.47 | 85.47 |  229.6 |   45.0 |  211.4
+  Exp_Forward_Gate       |  12.7 |  27.48 |  0.893 | 24.37 | 86.97 |  203.3 |   36.5 |  200.1
+  Exp_Forward            |  14.1 |  28.04 |  0.867 | 22.74 | 82.50 |  259.5 |   53.2 |  233.4
+  Exp_Reverse_Gate       |  15.3 |  27.47 |  0.874 | 22.74 | 82.93 |  257.8 |   53.2 |  225.0
+  Exp_Boost              |  12.7 |  26.95 |  0.907 | 25.45 | 87.74 |  209.5 |   28.5 |  199.4
+  TwoPhase               |  12.9 |  28.06 |  0.896 | 24.90 | 87.27 |  204.7 |   32.4 |  199.3
+  Entropy                |  12.7 |  27.80 |  0.883 | 24.40 | 86.39 |  208.1 |   36.3 |  203.7
+  Locality               |  12.8 |  26.58 |  0.880 | 25.34 | 87.93 |  196.0 |   29.2 |  194.1
+  Dual                   |   3.1 |  21.94 |  0.983 | 33.93 | 95.47 |   65.6 |    4.0 |   88.7

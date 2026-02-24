@@ -1,0 +1,70 @@
+[GPU 1] Chunk 0/7 — 100 images (0→99)
+[GPU 1] Chargement SD3-medium (visible=1) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+Loading pipeline components...:  11%|█         | 1/9 [00:00<00:01,  5.94it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  44%|████▍     | 4/9 [00:00<00:00, 12.31it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  7.96it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  9.31it/s]
+Loading pipeline components...:  67%|██████▋   | 6/9 [00:00<00:00,  7.87it/s]Loading pipeline components...:  89%|████████▉ | 8/9 [00:01<00:00,  7.59it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.67it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 1] [1/100]  000000000000  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+Traceback (most recent call last):
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 527, in <module>
+    main()
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 462, in main
+    src_emb, tgt_emb = pipe.encode_prompts(item["source"], item["target"])
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 335, in encode_prompts
+    pe_t, ne_t, ppe_t, npe_t = self.pipe.encode_prompt(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/pipelines/stable_diffusion_3/pipeline_stable_diffusion_3_img2img.py", line 534, in encode_prompt
+    t5_negative_prompt_embed = self._get_t5_prompt_embeds(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/pipelines/stable_diffusion_3/pipeline_stable_diffusion_3_img2img.py", line 300, in _get_t5_prompt_embeds
+    prompt_embeds = self.text_encoder_3(text_input_ids.to(device))[0]
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 1932, in forward
+    encoder_outputs = self.encoder(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 1100, in forward
+    layer_outputs = layer_module(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/modeling_layers.py", line 94, in __call__
+    return super().__call__(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/utils/deprecation.py", line 172, in wrapped_func
+    return func(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 737, in forward
+    hidden_states = self.layer[-1](hidden_states)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 343, in forward
+    forwarded_states = self.DenseReluDense(forwarded_states)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/models/t5/modeling_t5.py", line 312, in forward
+    hidden_linear = self.wi_1(hidden_states)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB. GPU 0 has a total capacity of 47.37 GiB of which 2.62 MiB is free. Process 3450629 has 8.02 GiB memory in use. Including non-PyTorch memory, this process has 39.32 GiB memory in use. Of the allocated memory 38.63 GiB is allocated by PyTorch, and 189.56 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

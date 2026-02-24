@@ -1,0 +1,49 @@
+[GPU 0] TEST MODE — 2 images seulement
+[GPU 0] Chunk 0/8 — 2 images (0→87)
+[GPU 0] Chargement SD3-medium sur cuda:0 (visible=0) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:01,  5.74it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  5.47it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  7.51it/s]
+Loading pipeline components...:  33%|███▎      | 3/9 [00:00<00:01,  5.99it/s]Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  7.44it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  78%|███████▊  | 7/9 [00:00<00:00,  8.54it/s]Loading pipeline components...:  89%|████████▉ | 8/9 [00:01<00:00,  8.32it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.46it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 0] [1/2]  000000000000  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+Traceback (most recent call last):
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 535, in <module>
+    main()
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 482, in main
+    gen_img, lam_mean = pipe.edit(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 396, in edit
+    pred = self.pipe.transformer(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/transformers/transformer_sd3.py", line 396, in forward
+    encoder_hidden_states, hidden_states = block(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/attention.py", line 694, in forward
+    attn_output, context_attn_output = self.attn(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 605, in forward
+    return self.processor(
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 1483, in __call__
+    hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 52.00 MiB. GPU 0 has a total capacity of 47.37 GiB of which 52.69 MiB is free. Process 2923557 has 7.31 GiB memory in use. Including non-PyTorch memory, this process has 39.98 GiB memory in use. Of the allocated memory 39.23 GiB is allocated by PyTorch, and 257.76 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

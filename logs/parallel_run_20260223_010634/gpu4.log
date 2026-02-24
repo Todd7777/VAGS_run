@@ -1,0 +1,49 @@
+[GPU 4] Chunk 3/7 — 100 images (300→399)
+[GPU 4] Chargement SD3-medium (visible=4) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:01,  4.61it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  33%|███▎      | 3/9 [00:00<00:00,  7.22it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+Loading pipeline components...:  44%|████▍     | 4/9 [00:00<00:00,  7.31it/s]Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  4.39it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  4.88it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  6.39it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  6.10it/s]
+Loading pipeline components...:  78%|███████▊  | 7/9 [00:01<00:00,  4.67it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  6.31it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 4] [1/100]  311000000000  (1_animal)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  20.92 |  0.879 | 21.12 | 85.91 |  202.8 |   77.2 |  536.8
+  Exp_Forward_Gate       |  12.4 |  21.41 |  0.879 | 22.44 | 87.42 |  195.6 |   57.0 |  511.0
+  Exp_Forward            |  14.3 |  21.91 |  0.883 | 21.83 | 86.50 |  198.1 |   65.6 |  372.2
+  Exp_Reverse_Gate       |  17.4 |  21.30 |  0.869 | 18.99 | 82.91 |  220.7 |  126.2 |  452.1
+  Exp_Boost              |  12.6 |  20.44 |  0.887 | 22.91 | 88.09 |  188.9 |   51.2 |  499.4
+  TwoPhase               |  12.7 |  21.11 |  0.867 | 22.19 | 87.95 |  185.2 |   60.4 |  446.5
+  Entropy                |  12.4 |  20.20 |  0.909 | 22.14 | 87.52 |  188.8 |   61.1 |  509.0
+  Locality               |  12.5 |  21.43 |  0.891 | 22.40 | 87.91 |  187.4 |   57.5 |  470.3
+  Dual                   |   3.5 |  20.49 |  0.971 | 35.11 | 98.55 |   25.8 |    3.1 |  316.7
+  Quantile               |  12.7 |  19.58 |  0.889 | 22.07 | 89.98 |  175.4 |   62.0 |  589.2
+  Budget_Matched         |  12.6 |  21.41 |  0.844 | 21.33 | 85.98 |  205.8 |   73.7 |  500.4
+  → 164s (15s/stratégie)
+
+[GPU 4] [2/100]  311000000001  (1_animal)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  23.61 |  0.739 | 21.65 | 92.11 |  109.7 |   68.5 |  205.6
+  Exp_Forward_Gate       |  12.3 |  24.30 |  0.835 | 22.00 | 91.73 |  149.2 |   63.1 |  239.2
+  Exp_Forward            |  13.8 |  24.99 |  0.867 | 22.63 | 92.25 |  155.2 |   54.5 |  238.9
+  Exp_Reverse_Gate       |  15.6 |  25.64 |  0.842 | 21.93 | 91.69 |  121.8 |   64.1 |  233.1
+  Exp_Boost              |  12.3 |  26.79 |  0.814 | 23.13 | 93.56 |  126.9 |   48.6 |  215.9
+  TwoPhase               |  12.4 |  27.20 |  0.841 | 22.08 | 92.28 |  123.4 |   62.0 |  229.7
+  Entropy                |  12.4 |  27.08 |  0.800 | 22.59 | 92.83 |  120.4 |   55.0 |  214.5
+  Locality               |  12.4 |  26.19 |  0.845 | 23.21 | 93.50 |  113.3 |   47.7 |  213.0
+  Dual                   |   3.2 |  22.65 |  0.945 | 30.65 | 98.31 |   40.3 |    8.6 |  136.9
+  Quantile               |  12.7 |  26.71 |  0.808 | 21.71 | 92.13 |  152.5 |   67.5 |  243.5
+  Budget_Matched         |  12.8 |  25.69 |  0.783 | 22.25 | 92.78 |  110.2 |   59.5 |  204.7
+  → 169s (15s/stratégie)
+
+[GPU 4] [3/100]  311000000002  (1_animal)

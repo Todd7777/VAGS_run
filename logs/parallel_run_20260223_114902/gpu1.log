@@ -1,0 +1,105 @@
+[GPU 1] Chunk 0/7 — 100 images (0→99)
+[GPU 1] Chargement SD3-medium (visible=1) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  11%|█         | 1/9 [00:00<00:02,  3.55it/s]Loading pipeline components...:  33%|███▎      | 3/9 [00:00<00:01,  4.90it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  6.78it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 12.03it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 12.00it/s]
+Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  9.77it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.11it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 1] [1/100]  000000000000  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  31.80 |  0.866 | 22.59 | 89.39 |  147.9 |   55.1 |  212.1
+  Exp_Forward_Gate       |  12.5 |  31.50 |  0.894 | 23.08 | 91.80 |  113.0 |   49.2 |  177.9
+  Exp_Forward            |  13.8 |  32.18 |  0.865 | 22.49 | 89.40 |  142.5 |   56.4 |  208.6
+  Exp_Reverse_Gate       |  15.4 |  31.13 |  0.862 | 21.12 | 86.87 |  156.8 |   77.3 |  220.1
+  Exp_Boost              |  12.2 |  31.08 |  0.897 | 22.86 | 91.79 |  115.4 |   51.7 |  176.7
+  TwoPhase               |  12.7 |  31.59 |  0.879 | 23.12 | 90.94 |  129.2 |   48.8 |  193.9
+  Entropy                |  12.5 |  31.90 |  0.885 | 22.80 | 90.01 |  141.1 |   52.5 |  206.2
+  Locality               |  12.6 |  31.06 |  0.903 | 23.30 | 91.28 |  131.2 |   46.7 |  201.2
+  Dual                   |   3.1 |  23.13 |  0.990 | 32.19 | 98.18 |   39.1 |    6.0 |   98.2
+  Quantile               |  12.4 |  30.05 |  0.896 | 22.16 | 90.32 |  155.7 |   60.8 |  214.7
+  Budget_Matched         |  12.9 |  32.53 |  0.893 | 22.54 | 90.21 |  134.0 |   55.7 |  203.9
+  → 155s (14s/stratégie)
+
+[GPU 1] [2/100]  000000000001  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  25.89 |  0.957 | 23.95 | 87.28 |  224.8 |   40.2 |  213.8
+  Exp_Forward_Gate       |  12.8 |  26.51 |  0.957 | 25.28 | 89.82 |  199.4 |   29.6 |  198.9
+  Exp_Forward            |  13.9 |  25.36 |  0.956 | 24.35 | 87.70 |  224.8 |   36.8 |  213.8
+  Exp_Reverse_Gate       |  15.2 |  25.65 |  0.956 | 23.07 | 86.13 |  246.8 |   49.3 |  224.8
+  Exp_Boost              |  12.6 |  25.94 |  0.961 | 25.54 | 90.49 |  189.9 |   27.9 |  192.5
+  TwoPhase               |  12.9 |  25.45 |  0.964 | 25.14 | 89.16 |  204.9 |   30.6 |  202.8
+  Entropy                |  12.7 |  25.81 |  0.960 | 24.60 | 88.89 |  208.9 |   34.6 |  202.7
+  Locality               |  12.8 |  26.54 |  0.964 | 25.27 | 90.30 |  188.2 |   29.7 |  191.6
+  Dual                   |   3.1 |  24.14 |  0.990 | 32.07 | 97.16 |   71.6 |    6.2 |  108.6
+  Quantile               |  12.7 |  25.51 |  0.970 | 25.50 | 89.96 |  206.4 |   28.2 |  206.3
+  Budget_Matched         |  13.1 |  26.02 |  0.964 | 24.97 | 89.77 |  195.2 |   31.8 |  199.0
+  → 164s (15s/stratégie)
+
+[GPU 1] [3/100]  000000000002  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  27.21 |  0.882 | 19.26 | 77.92 |  309.7 |  118.5 |  317.0
+  Exp_Forward_Gate       |  12.4 |  26.69 |  0.879 | 21.14 | 82.93 |  262.0 |   77.0 |  281.3
+  Exp_Forward            |  14.0 |  26.79 |  0.874 | 20.66 | 80.34 |  293.8 |   85.9 |  305.1
+  Exp_Reverse_Gate       |  17.0 |  27.84 |  0.873 | 17.76 | 71.54 |  364.3 |  167.6 |  349.9
+  Exp_Boost              |  12.2 |  25.11 |  0.865 | 21.58 | 83.66 |  271.7 |   69.5 |  279.6
+  TwoPhase               |  12.6 |  26.55 |  0.875 | 21.85 | 84.43 |  253.6 |   65.3 |  271.8
+  Entropy                |  12.2 |  26.25 |  0.877 | 20.85 | 83.08 |  252.9 |   82.2 |  276.0
+  Locality               |  12.3 |  26.17 |  0.865 | 20.55 | 81.50 |  276.7 |   88.0 |  291.8
+  Dual                   |   3.4 |  25.80 |  0.906 | 27.09 | 94.14 |  122.9 |   19.5 |  176.5
+  Quantile               |  11.9 |  25.15 |  0.835 | 21.37 | 83.63 |  285.4 |   73.0 |  289.7
+  Budget_Matched         |  12.7 |  26.85 |  0.892 | 20.68 | 81.82 |  273.2 |   85.5 |  290.8
+  → 162s (15s/stratégie)
+
+[GPU 1] [4/100]  000000000003  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  27.35 |  0.866 | 18.54 | 73.93 |  288.6 |  139.9 |  265.1
+  Exp_Forward_Gate       |  12.2 |  28.30 |  0.877 | 20.82 | 80.43 |  249.9 |   82.8 |  244.4
+  Exp_Forward            |  13.9 |  27.92 |  0.865 | 19.83 | 76.70 |  280.9 |  103.9 |  258.5
+  Exp_Reverse_Gate       |  17.5 |  27.96 |  0.877 | 17.28 | 68.45 |  330.8 |  187.1 |  299.0
+  Exp_Boost              |  12.0 |  28.23 |  0.869 | 20.99 | 80.60 |  253.2 |   79.7 |  244.0
+  TwoPhase               |  12.4 |  28.80 |  0.882 | 20.78 | 79.47 |  260.8 |   83.6 |  248.2
+  Entropy                |  12.1 |  28.24 |  0.870 | 20.40 | 79.98 |  249.5 |   91.2 |  237.7
+  Locality               |  12.1 |  28.92 |  0.883 | 19.97 | 79.07 |  256.1 |  100.8 |  244.2
+  Dual                   |   3.2 |  30.26 |  0.937 | 29.45 | 95.48 |   85.9 |   11.3 |  121.5
+  Quantile               |  12.1 |  29.64 |  0.864 | 20.85 | 81.84 |  254.8 |   82.3 |  243.0
+  Budget_Matched         |  12.6 |  29.05 |  0.871 | 19.54 | 77.64 |  263.0 |  111.0 |  247.0
+  → 163s (15s/stratégie)
+
+[GPU 1] [5/100]  000000000004  (0_random_140)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+Traceback (most recent call last):
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 462, in <module>
+    main()
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 414, in main
+    src_emb, tgt_emb = pipe.encode_prompts(item["source"], item["target"])
+  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 319, in encode_prompts
+    self.pipe.text_encoder_3.to("cuda:0")
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/modeling_utils.py", line 4343, in to
+    return super().to(*args, **kwargs)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1343, in to
+    return self._apply(convert)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
+    module._apply(fn)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
+    module._apply(fn)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
+    module._apply(fn)
+  [Previous line repeated 4 more times]
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 930, in _apply
+    param_applied = fn(param)
+  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1329, in convert
+    return t.to(
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 80.00 MiB. GPU 0 has a total capacity of 47.37 GiB of which 58.62 MiB is free. Including non-PyTorch memory, this process has 30.32 GiB memory in use. Process 989787 has 16.97 GiB memory in use. Of the allocated memory 29.79 GiB is allocated by PyTorch, and 22.26 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

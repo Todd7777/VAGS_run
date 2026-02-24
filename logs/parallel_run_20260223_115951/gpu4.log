@@ -1,0 +1,21 @@
+[GPU 4] Chunk 3/5 — 140 images (420→559)
+[GPU 4] Chargement SD3-medium (visible=4) …
+Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:03,  2.15it/s]`torch_dtype` is deprecated! Use `dtype` instead!
+Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  8.49it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
+Loading pipeline components...:  78%|███████▊  | 7/9 [00:00<00:00,  9.20it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
+Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 11.45it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 11.43it/s]
+Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.87it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.02it/s]
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
+
+[GPU 4] [1/140]  511000000000  (1_animal)
+  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
+  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
+  Baseline               |  13.5 |  26.70 |  0.748 | 24.36 | 95.58 |   69.1 |   36.6 |  378.8
+  Exp_Forward_Gate       |  12.9 |  24.17 |  0.836 | 24.97 | 95.82 |   81.3 |   31.9 |  506.9
+  Exp_Forward            |  14.1 |  25.96 |  0.848 | 26.33 | 97.02 |   37.1 |   23.3 |  180.5
