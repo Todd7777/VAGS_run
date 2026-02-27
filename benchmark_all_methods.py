@@ -1,24 +1,3 @@
-"""
-benchmark_all_methods.py — Comprehensive image-editing benchmark
-=================================================================
-10 methods, 8 × RTX 6000 Ada (49 GB each), parallel via multiprocessing spawn.
-
-GPU 0 → FlowEdit        (FLUX.1-dev, diffusers)
-GPU 1 → CAG             (SDXL + AnneAling Guidance, trained ScalarMLP)
-GPU 2 → RF-Inversion    (FLUX.1-dev, basic Euler, FireFlow repo)
-GPU 3 → RF-Solver       (FLUX.1-dev, 2nd-order, FireFlow repo)
-GPU 4 → FireFlow        (FLUX.1-dev, velocity reuse + V-injection, FireFlow repo)
-GPU 5 → DDIM + Null-Text + PnP-Inv  (SD 1.4, PnPInversion repo, sequential)
-GPU 6 → iRFDS           (SD3-medium, score distillation 1400 iters)
-GPU 7 → FTEdit + SplitFlow  (SD3.5-Large + SD3, sequential)
-
-Usage:
-  conda run -n pytorch_env python benchmark_all_methods.py \\
-        --yaml    Data/flowedit.yaml \\
-        --images  Data/flowedit_data/ \\
-        --outdir  outputs/benchmark_$(date +%Y%m%d) \\
-        [--max_pairs N]
-"""
 
 import os, sys, csv, json, re, yaml, traceback, argparse, logging
 from pathlib import Path
