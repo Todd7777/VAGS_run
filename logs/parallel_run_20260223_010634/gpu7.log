@@ -1,48 +1,0 @@
-[GPU 7] Chunk 6/7 — 100 images (600→699)
-[GPU 7] Chargement SD3-medium (visible=7) …
-Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:02,  3.14it/s]`torch_dtype` is deprecated! Use `dtype` instead!
-Loading pipeline components...:  22%|██▏       | 2/9 [00:00<00:01,  4.72it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  33%|███▎      | 3/9 [00:00<00:01,  5.16it/s]Loading pipeline components...:  78%|███████▊  | 7/9 [00:00<00:00, 13.42it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  7.11it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  9.10it/s]
-Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00, 10.26it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.76it/s]
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
-  warnings.warn(
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
-  warnings.warn(msg)
-Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
-Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
-
-[GPU 7] [1/100]  823000000000  (3_indoor)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  30.16 |  0.880 | 21.67 | 86.69 |  186.3 |   68.0 |  255.9
-  Exp_Forward_Gate       |  12.5 |  29.15 |  0.859 | 22.68 | 89.01 |  170.4 |   53.9 |  251.6
-  Exp_Forward            |  14.0 |  28.45 |  0.919 | 22.63 | 87.03 |  203.5 |   54.6 |  271.9
-  Exp_Reverse_Gate       |  15.5 |  28.65 |  0.920 | 21.65 | 84.82 |  195.6 |   68.4 |  254.4
-  Exp_Boost              |  12.5 |  30.87 |  0.866 | 23.35 | 88.66 |  190.7 |   46.2 |  262.3
-  TwoPhase               |  12.8 |  28.96 |  0.918 | 23.14 | 88.00 |  190.1 |   48.6 |  264.5
-  Entropy                |  12.7 |  30.15 |  0.867 | 23.67 | 89.78 |  171.5 |   42.9 |  248.5
-  Locality               |  12.7 |  28.63 |  0.921 | 23.48 | 89.37 |  175.3 |   44.9 |  253.1
-  Dual                   |   3.3 |  27.12 |  0.983 | 30.78 | 96.48 |   72.3 |    8.4 |  179.5
-  Quantile               |  12.6 |  30.30 |  0.882 | 24.37 | 90.71 |  199.9 |   36.5 |  284.5
-  Budget_Matched         |  12.9 |  30.08 |  0.896 | 23.38 | 89.06 |  173.9 |   45.9 |  252.1
-  → 155s (14s/stratégie)
-
-[GPU 7] [2/100]  823000000001  (3_indoor)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  22.88 |  0.989 | 22.66 | 84.32 |  178.6 |   54.2 |  204.5
-  Exp_Forward_Gate       |  12.7 |  22.57 |  0.989 | 23.57 | 86.34 |  165.9 |   43.9 |  191.3
-  Exp_Forward            |  13.9 |  22.49 |  0.986 | 22.86 | 84.82 |  181.6 |   51.7 |  204.7
-  Exp_Reverse_Gate       |  15.9 |  23.13 |  0.971 | 20.05 | 76.29 |  244.7 |   98.7 |  251.0
-  Exp_Boost              |  12.6 |  22.61 |  0.990 | 24.34 | 87.78 |  163.2 |   36.8 |  185.6
-  TwoPhase               |  12.9 |  22.43 |  0.991 | 24.02 | 86.76 |  162.3 |   39.7 |  193.1
-  Entropy                |  12.7 |  22.28 |  0.989 | 23.63 | 86.86 |  168.4 |   43.4 |  191.5
-  Locality               |  12.7 |  23.08 |  0.991 | 24.02 | 87.45 |  158.4 |   39.7 |  186.3
-  Dual                   |   3.1 |  22.80 |  0.994 | 30.93 | 96.08 |   62.4 |    8.1 |   93.1
-  Quantile               |  12.7 |  22.93 |  0.985 | 24.56 | 87.67 |  203.4 |   35.0 |  193.8
-  Budget_Matched         |  12.9 |  23.00 |  0.991 | 23.19 | 85.06 |  173.4 |   48.0 |  202.7
-  → 162s (15s/stratégie)
-
-[GPU 7] [3/100]  823000000002  (3_indoor)

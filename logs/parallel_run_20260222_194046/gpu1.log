@@ -1,49 +1,0 @@
-[GPU 1] TEST MODE — 2 images seulement
-[GPU 1] Chunk 1/8 — 2 images (88→175)
-[GPU 1] Chargement SD3-medium sur cuda:0 (visible=1) …
-Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:03,  2.24it/s]`torch_dtype` is deprecated! Use `dtype` instead!
-
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  9.86it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 10.58it/s]
-Loading pipeline components...:  22%|██▏       | 2/9 [00:00<00:02,  3.20it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  6.53it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00, 10.79it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  7.97it/s]
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
-  warnings.warn(
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
-  warnings.warn(msg)
-Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
-Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
-
-[GPU 1] [1/2]  000000000088  (0_random_140)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  33.73 |  0.803 | 21.33 | 88.24 |  172.4 |   73.6 |  156.4
-  Exp_Forward_Gate       |  12.8 |  34.02 |  0.835 | 22.60 | 89.28 |  156.1 |   54.9 |  149.7
-  Exp_Forward            |  13.9 |  34.60 |  0.835 | 21.77 | 88.63 |  164.2 |   66.5 |  158.5
-  Exp_Reverse_Gate       |  15.1 |  32.53 |  0.803 | 20.66 | 86.63 |  176.4 |   85.9 |  164.2
-  Exp_Boost              |  12.7 |  32.24 |  0.822 | 23.43 | 90.30 |  156.9 |   45.4 |  150.0
-  TwoPhase               |  12.9 |  32.94 |  0.826 | 22.85 | 89.45 |  161.8 |   51.9 |  150.4
-  Entropy                |  12.8 |  33.26 |  0.833 | 22.96 | 89.82 |  159.0 |   50.6 |  149.9
-  Locality               |  12.8 |  34.59 |  0.822 | 23.07 | 89.90 |  155.1 |   49.3 |  150.9
-  Dual                   |   3.2 |  22.87 |  0.911 | 29.45 | 96.42 |   71.6 |   11.3 |   86.9
-  Quantile               |  12.0 |  30.23 |  0.863 | 22.70 | 86.29 |  218.3 |   53.7 |  184.0
-  Budget_Matched         |  13.1 |  34.54 |  0.808 | 22.46 | 89.95 |  151.8 |   56.7 |  147.2
-  → image traitée en 150s (14s/stratégie)
-
-[GPU 1] [2/2]  000000000089  (0_random_140)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  20.97 |  0.947 | 21.36 | 84.50 |  273.6 |   73.2 |  278.1
-  Exp_Forward_Gate       |  12.5 |  21.37 |  0.959 | 22.51 | 86.83 |  237.3 |   56.1 |  256.1
-  Exp_Forward            |  14.0 |  20.50 |  0.944 | 21.98 | 85.82 |  265.8 |   63.4 |  266.8
-  Exp_Reverse_Gate       |  16.0 |  22.29 |  0.938 | 20.36 | 82.76 |  293.6 |   92.2 |  291.4
-  Exp_Boost              |  12.4 |  21.08 |  0.949 | 22.87 | 87.61 |  231.9 |   51.6 |  247.0
-  TwoPhase               |  12.7 |  20.69 |  0.953 | 22.90 | 87.45 |  241.0 |   51.3 |  252.7
-  Entropy                |  12.5 |  21.14 |  0.956 | 22.67 | 86.88 |  242.2 |   54.0 |  258.9
-  Locality               |  12.6 |  21.01 |  0.955 | 22.75 | 87.17 |  236.4 |   53.1 |  254.4
-  Dual                   |   3.1 |  21.90 |  0.989 | 31.82 | 96.27 |   64.9 |    6.6 |  122.5
-  Quantile               |  11.7 |  20.89 |  0.955 | 24.39 | 89.51 |  221.5 |   36.4 |  229.3
-  Budget_Matched         |  12.9 |  21.02 |  0.955 | 22.28 | 86.91 |  234.2 |   59.1 |  260.2
-  → image traitée en 155s (14s/stratégie)
-
-[GPU 1] Terminé — résultats dans outputs/PIE_BENCH_PARALLEL/results_gpu1_chunk1.csv

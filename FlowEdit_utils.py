@@ -1,10 +1,8 @@
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 import torch
-from diffusers import FlowMatchEulerDiscreteScheduler
 from tqdm import tqdm
 import numpy as np
 from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import retrieve_timesteps
-
 
 def scale_noise(
     scheduler,
@@ -25,7 +23,6 @@ def scale_noise(
         `torch.FloatTensor`:
             A scaled input sample.
     """
-    # if scheduler.step_index is None:
     scheduler._init_step_index(timestep)
 
     sigma = scheduler.sigmas[scheduler.step_index]
@@ -33,8 +30,6 @@ def scale_noise(
 
     return sample
 
-
-# for flux
 def calculate_shift(
     image_seq_len,
     base_seq_len: int = 256,
@@ -47,20 +42,13 @@ def calculate_shift(
     mu = image_seq_len * m + b
     return mu
 
-
 def calc_v_sd3(
         pipe, src_tar_latent_model_input,
         src_tar_prompt_embeds, src_tar_pooled_prompt_embeds,
         src_guidance_scale, tar_guidance_scale, t):
-    # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
     timestep = t.expand(src_tar_latent_model_input.shape[0])
-    # joint_attention_kwargs = {}
-    # # add timestep to joint_attention_kwargs
-    # joint_attention_kwargs["timestep"] = timestep[0]
-    # joint_attention_kwargs["timestep_idx"] = i
 
     with torch.no_grad():
-        # # predict the noise for the source prompt
         noise_pred_src_tar = pipe.transformer(
             hidden_states=src_tar_latent_model_input,
             timestep=timestep,
@@ -70,7 +58,6 @@ def calc_v_sd3(
             return_dict=False,
         )[0]
 
-        # perform guidance source
         if pipe.do_classifier_free_guidance:
             src_noise_pred_uncond, src_noise_pred_text, tar_noise_pred_uncond, tar_noise_pred_text = noise_pred_src_tar.chunk(4)
             noise_pred_src = src_noise_pred_uncond + src_guidance_scale * (src_noise_pred_text - src_noise_pred_uncond)
@@ -78,20 +65,13 @@ def calc_v_sd3(
 
     return noise_pred_src, noise_pred_tar
 
-
 def calc_v_flux(
         pipe, latents, prompt_embeds,
         pooled_prompt_embeds, guidance,
         text_ids, latent_image_ids, t):
-    # broadcast to batch dimension in a way that's compatible with ONNX/Core ML
     timestep = t.expand(latents.shape[0])
-    # joint_attention_kwargs = {}
-    # # add timestep to joint_attention_kwargs
-    # joint_attention_kwargs["timestep"] = timestep[0]
-    # joint_attention_kwargs["timestep_idx"] = i
 
     with torch.no_grad():
-        # # predict the noise for the source prompt
         noise_pred = pipe.transformer(
             hidden_states=latents,
             timestep=timestep / 1000,
@@ -105,7 +85,6 @@ def calc_v_flux(
         )[0]
 
     return noise_pred
-
 
 @torch.no_grad()
 def FlowEditSD3(pipe,
@@ -123,7 +102,6 @@ def FlowEditSD3(pipe,
 
     device = x_src.device
 
-    # reduce precision to float16 to save GPU memory
     x_src = x_src.to(torch.float16)
     torch.cuda.empty_cache()
     import gc
@@ -135,7 +113,6 @@ def FlowEditSD3(pipe,
     pipe._num_timesteps = len(timesteps)
     pipe._guidance_scale = src_guidance_scale
 
-    # src prompts
     (
         src_prompt_embeds,
         src_negative_prompt_embeds,
@@ -150,7 +127,6 @@ def FlowEditSD3(pipe,
         device=device,
     )
 
-    # tar prompts
     pipe._guidance_scale = tar_guidance_scale
     (
         tar_prompt_embeds,
@@ -166,7 +142,6 @@ def FlowEditSD3(pipe,
         device=device,
     )
 
-    # CFG prep
     src_tar_prompt_embeds = torch.cat(
         [src_negative_prompt_embeds, src_prompt_embeds,
          tar_negative_prompt_embeds, tar_prompt_embeds], dim=0)
@@ -174,7 +149,6 @@ def FlowEditSD3(pipe,
         [src_negative_pooled_prompt_embeds, src_pooled_prompt_embeds,
          tar_negative_pooled_prompt_embeds, tar_pooled_prompt_embeds], dim=0)
 
-    # initialize our ODE Zt_edit_1=x_src
     zt_edit = x_src.clone()
 
     for i, t in tqdm(enumerate(timesteps)):
@@ -192,7 +166,6 @@ def FlowEditSD3(pipe,
 
         if T_steps - i > n_min:
 
-            # Calculate the average of the V predictions
             V_delta_avg = torch.zeros_like(x_src)
             for k in range(n_avg):
 
@@ -210,19 +183,17 @@ def FlowEditSD3(pipe,
                     src_tar_pooled_prompt_embeds, src_guidance_scale,
                     tar_guidance_scale, t)
 
-                V_delta_avg += (1/n_avg) * (Vt_tar - Vt_src)  # - (hfg-1)*( x_src))
+                V_delta_avg += (1/n_avg) * (Vt_tar - Vt_src)
 
-            # propagate direct ODE
             zt_edit = zt_edit.to(torch.float32)
 
             zt_edit = zt_edit + (t_im1 - t_i) * V_delta_avg
 
             zt_edit = zt_edit.to(V_delta_avg.dtype)
 
-        else:  # i >= T_steps-n_min # regular sampling for last n_min steps
+        else:
 
             if i == T_steps-n_min:
-                # initialize SDEDIT-style generation phase
                 fwd_noise = torch.randn_like(x_src).to(x_src.device)
                 xt_src = scale_noise(scheduler, x_src, t, noise=fwd_noise)
                 xt_tar = zt_edit + xt_src - x_src
@@ -247,7 +218,6 @@ def FlowEditSD3(pipe,
     gc.collect()
     return zt_edit if n_min == 0 else xt_tar
 
-
 @torch.no_grad()
 def FlowEditFLUX(pipe,
                  scheduler,
@@ -264,7 +234,6 @@ def FlowEditFLUX(pipe,
 
     device = x_src.device
 
-    # reduce precision to float16 to save GPU memory
     x_src = x_src.to(torch.float16)
     torch.cuda.empty_cache()
     import gc
@@ -288,7 +257,6 @@ def FlowEditFLUX(pipe,
         x_src.shape[2], x_src.shape[3])
     latent_tar_image_ids = latent_src_image_ids
 
-    # 5. Prepare timesteps
     sigmas = np.linspace(1.0, 1 / T_steps, T_steps)
     image_seq_len = x_src_packed.shape[1]
     mu = calculate_shift(
@@ -310,7 +278,6 @@ def FlowEditFLUX(pipe,
     num_warmup_steps = max(len(timesteps) - T_steps * pipe.scheduler.order, 0)
     pipe._num_timesteps = len(timesteps)
 
-    # src prompts
     (
         src_prompt_embeds,
         src_pooled_prompt_embeds,
@@ -322,7 +289,6 @@ def FlowEditFLUX(pipe,
         device=device,
     )
 
-    # tar prompts
     pipe._guidance_scale = tar_guidance_scale
     (
         tar_prompt_embeds,
@@ -334,7 +300,6 @@ def FlowEditFLUX(pipe,
         device=device,
     )
 
-    # handle guidance
     if pipe.transformer.config.guidance_embeds:
         src_guidance = torch.tensor([src_guidance_scale], device=device)
         src_guidance = src_guidance.expand(x_src_packed.shape[0])
@@ -344,7 +309,6 @@ def FlowEditFLUX(pipe,
         src_guidance = None
         tar_guidance = None
 
-    # initialize our ODE Zt_edit_1=x_src
     zt_edit = x_src_packed.clone()
 
     for i, t in tqdm(enumerate(timesteps)):
@@ -362,7 +326,6 @@ def FlowEditFLUX(pipe,
 
         if T_steps - i > n_min:
 
-            # Calculate the average of the V predictions
             V_delta_avg = torch.zeros_like(x_src_packed)
 
             for k in range(n_avg):
@@ -374,7 +337,6 @@ def FlowEditFLUX(pipe,
 
                 zt_tar = zt_edit + zt_src - x_src_packed
 
-                # Merge in the future to avoid double computation
                 Vt_src = calc_v_flux(pipe,
                                      latents=zt_src,
                                      prompt_embeds=src_prompt_embeds,
@@ -393,19 +355,17 @@ def FlowEditFLUX(pipe,
                                      latent_image_ids=latent_tar_image_ids,
                                      t=t)
 
-                V_delta_avg += (1/n_avg)*(Vt_tar - Vt_src)  # -(hfg-1)*(x_src))
+                V_delta_avg += (1/n_avg)*(Vt_tar - Vt_src)
 
-            # propagate direct ODE
             zt_edit = zt_edit.to(torch.float32)
 
             zt_edit = zt_edit + (t_im1 - t_i) * V_delta_avg
 
             zt_edit = zt_edit.to(V_delta_avg.dtype)
 
-        else:  # i >= T_steps-n_min # regular sampling last n_min steps
+        else:
 
             if i == T_steps-n_min:
-                # initialize SDEDIT-style generation phase
                 fwd_noise = torch.randn_like(
                     x_src_packed).to(x_src_packed.device)
                 xt_src = scale_noise(

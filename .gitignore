@@ -4,7 +4,42 @@ __pycache__/
 .vscode/
 .venv/
 env/
+venv/
+
+# Generated outputs
 outputs/
+results/
+logs/
+
+# Large datasets not part of release
 Data/Images/
+Data/flowedit_data/
+
+# Keep these
 !Data/flowedit.yaml
+!Data/dataset.csv
 !example_images/
+
+# Scripts not part of the public release
+benchmark_final.py
+benchmark_mini_batch.py
+benchmark_parallel.py
+benchmark_pie_parallel.py
+benchmark_all_methods_1.py
+benchmark_all_methods_partial.py
+edit_pipeline.py
+merge_results.py
+metrics.py
+recompute_clip_e.py
+run_ablation_study.py
+run_div2k_sota.py
+run_div2k_sota_models.py
+run_hybrid2.py
+run_late_start_benchmark.py
+run_parametric.py
+run_parametric_study.py
+run_pie_bench.py
+run_pie_bench_sota.py
+run_sign_flip_optimization.py
+utils.py
+check_setup.sh

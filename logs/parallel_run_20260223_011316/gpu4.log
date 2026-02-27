@@ -1,83 +1,0 @@
-[GPU 4] Chunk 3/7 — 100 images (300→399)
-[GPU 4] Chargement SD3-medium (visible=4) …
-Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]`torch_dtype` is deprecated! Use `dtype` instead!
-Loading pipeline components...:  11%|█         | 1/9 [00:00<00:02,  3.48it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  22%|██▏       | 2/9 [00:00<00:01,  4.65it/s]Loading pipeline components...:  44%|████▍     | 4/9 [00:00<00:00,  5.48it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 12.48it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 12.45it/s]
-Loading pipeline components...:  78%|███████▊  | 7/9 [00:01<00:00,  8.03it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.35it/s]
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
-  warnings.warn(
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
-  warnings.warn(msg)
-Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
-Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
-
-[GPU 4] [1/100]  311000000000  (1_animal)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  22.50 |  0.865 | 21.35 | 86.11 |  197.8 |   73.2 |  366.6
-  Exp_Forward_Gate       |  12.4 |  20.66 |  0.883 | 22.02 | 87.52 |  193.1 |   62.8 |  473.7
-  Exp_Forward            |  14.3 |  22.43 |  0.860 | 21.49 | 86.26 |  192.9 |   71.0 |  358.6
-  Exp_Reverse_Gate       |  17.3 |  22.81 |  0.891 | 19.73 | 83.92 |  215.0 |  106.4 |  304.3
-  Exp_Boost              |  12.6 |  20.15 |  0.898 | 23.21 | 88.96 |  185.3 |   47.7 |  513.6
-  TwoPhase               |  12.6 |  21.05 |  0.905 | 22.32 | 87.09 |  192.5 |   58.6 |  391.5
-  Entropy                |  12.3 |  20.26 |  0.879 | 22.34 | 87.49 |  194.4 |   58.3 |  505.8
-  Locality               |  12.4 |  20.50 |  0.889 | 22.51 | 87.78 |  192.5 |   56.0 |  464.3
-  Dual                   |   3.5 |  21.19 |  0.986 | 34.39 | 98.23 |   34.5 |    3.6 |  301.4
-  Quantile               |  11.7 |  19.14 |  0.913 | 24.03 | 90.83 |  158.4 |   39.5 |  557.4
-  Budget_Matched         |  12.6 |  20.94 |  0.888 | 21.51 | 86.32 |  207.8 |   70.7 |  503.1
-  → image traitée en 158s (14s/stratégie)
-
-[GPU 4] [2/100]  311000000001  (1_animal)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  25.79 |  0.799 | 22.10 | 92.36 |  112.7 |   61.6 |  217.6
-  Exp_Forward_Gate       |  12.4 |  27.40 |  0.860 | 22.47 | 93.09 |  113.6 |   56.6 |  213.0
-  Exp_Forward            |  13.7 |  26.53 |  0.774 | 22.10 | 91.98 |  132.3 |   61.6 |  231.3
-  Exp_Reverse_Gate       |  15.9 |  25.61 |  0.788 | 21.00 | 89.71 |  169.7 |   79.5 |  272.3
-  Exp_Boost              |  12.2 |  23.54 |  0.889 | 23.85 | 94.10 |  104.2 |   41.2 |  199.2
-  TwoPhase               |  12.5 |  27.62 |  0.816 | 22.27 | 92.65 |  115.5 |   59.3 |  217.9
-  Entropy                |  12.4 |  27.00 |  0.804 | 22.76 | 92.78 |  123.2 |   52.9 |  227.3
-  Locality               |  12.5 |  24.27 |  0.845 | 23.27 | 93.67 |   99.1 |   47.1 |  202.7
-  Dual                   |   3.2 |  21.93 |  0.952 | 30.53 | 98.12 |   46.3 |    8.8 |  154.6
-Traceback (most recent call last):
-  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 527, in <module>
-  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 474, in main
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
-    return func(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 414, in edit
-    src_emb, tgt_emb = pipe.encode_prompts(item["source"], item["target"])
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/utils/accelerate_utils.py", line 46, in wrapper
-    return method(self, *args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_kl.py", line 323, in decode
-    decoded = self._decode(z).sample
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_kl.py", line 294, in _decode
-    dec = self.decoder(z)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 305, in forward
-    sample = up_block(sample, latent_embeds)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 2643, in forward
-    hidden_states = upsampler(hidden_states)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/models/upsampling.py", line 188, in forward
-    hidden_states = self.conv(hidden_states)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
-    return self._call_impl(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
-    return forward_call(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 554, in forward
-    return self._conv_forward(input, self.weight, self.bias)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 549, in _conv_forward
-    return F.conv2d(
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 47.37 GiB of which 84.56 MiB is free. Including non-PyTorch memory, this process has 40.42 GiB memory in use. Process 725394 has 6.84 GiB memory in use. Of the allocated memory 39.67 GiB is allocated by PyTorch, and 250.54 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

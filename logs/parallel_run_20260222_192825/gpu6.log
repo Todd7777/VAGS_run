@@ -1,50 +1,0 @@
-[GPU 6] TEST MODE — 2 images seulement
-[GPU 6] Chunk 5/7 — 2 images (500→599)
-[GPU 6] Chargement SD3-medium sur cuda:0 (visible=6) …
-Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]Loading pipeline components...:  11%|█         | 1/9 [00:00<00:01,  6.11it/s]`torch_dtype` is deprecated! Use `dtype` instead!
-
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  2.88it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.96it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  2.95it/s]
-Loading pipeline components...:  33%|███▎      | 3/9 [00:00<00:01,  3.29it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  44%|████▍     | 4/9 [00:01<00:01,  3.47it/s]Loading pipeline components...:  67%|██████▋   | 6/9 [00:01<00:00,  5.79it/s]Loading pipeline components...:  89%|████████▉ | 8/9 [00:01<00:00,  7.01it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  5.20it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  5.00it/s]
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
-  warnings.warn(
-/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
-  warnings.warn(msg)
-Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
-Loading model from: /shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/lpips/weights/v0.1/vgg.pth
-
-[GPU 6] [1/2]  711000000000  (1_animal)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  30.78 |  0.818 | 18.89 | 83.33 |  166.9 |  129.1 |  271.2
-  Exp_Forward_Gate       |  12.6 |  26.90 |  0.848 | 20.13 | 86.34 |  153.9 |   97.0 |  443.7
-  Exp_Forward            |  14.3 |  29.37 |  0.836 | 20.19 | 85.00 |  167.2 |   95.6 |  407.4
-  Exp_Reverse_Gate       |  16.6 |  30.50 |  0.842 | 18.17 | 80.51 |  184.9 |  152.4 |  269.2
-  Exp_Boost              |  12.7 |  28.90 |  0.840 | 20.18 | 86.26 |  156.9 |   96.0 |  486.9
-  TwoPhase               |  12.9 |  28.71 |  0.840 | 20.43 | 86.78 |  152.8 |   90.5 |  385.3
-  Entropy                |  12.6 |  29.11 |  0.853 | 20.06 | 85.74 |  154.4 |   98.7 |  372.4
-  Locality               |  12.7 |  29.81 |  0.847 | 20.17 | 86.41 |  153.1 |   96.2 |  440.4
-  Dual                   |   3.5 |  23.17 |  0.968 | 30.82 | 98.09 |   39.2 |    8.3 |  197.6
-  Quantile               |  11.7 |  26.87 |  0.883 | 21.68 | 88.98 |  163.2 |   67.9 |  542.4
-  Budget_Matched         |  12.9 |  29.39 |  0.840 | 20.51 | 86.63 |  156.8 |   89.0 |  467.6
-  → image traitée en 162s (15s/stratégie)
-
-[GPU 6] [2/2]  711000000001  (1_animal)
-  Strategy               |     λ | CLIP-W | CLIP-I |  PSNR |  SSIM |  LPIPS |    MSE |     SD
-  -----------------------+--------+--------+--------+--------+--------+--------+--------+--------+-
-  Baseline               |  13.5 |  26.35 |  0.974 | 21.42 | 83.56 |  200.6 |   72.1 |  286.3
-  Exp_Forward_Gate       |  12.5 |  24.77 |  0.979 | 22.94 | 86.12 |  186.9 |   50.8 |  281.2
-  Exp_Forward            |  14.0 |  25.49 |  0.966 | 22.16 | 84.28 |  202.9 |   60.9 |  290.2
-  Exp_Reverse_Gate       |  16.2 |  25.85 |  0.966 | 19.86 | 77.86 |  261.7 |  103.3 |  338.3
-  Exp_Boost              |  12.4 |  25.20 |  0.975 | 24.04 | 87.48 |  184.4 |   39.5 |  278.7
-  TwoPhase               |  12.7 |  25.61 |  0.964 | 23.12 | 86.31 |  186.4 |   48.7 |  278.9
-  Entropy                |  12.5 |  25.17 |  0.966 | 22.74 | 85.57 |  195.0 |   53.2 |  280.3
-  Locality               |  12.6 |  25.38 |  0.969 | 23.02 | 85.98 |  184.0 |   49.9 |  278.4
-  Dual                   |   3.3 |  23.71 |  0.993 | 30.93 | 94.76 |   79.1 |    8.1 |  187.1
-  Quantile               |  13.0 |  24.97 |  0.951 | 23.42 | 85.93 |  248.5 |   45.5 |  330.4
-  Budget_Matched         |  12.9 |  25.68 |  0.970 | 22.13 | 85.06 |  192.2 |   61.2 |  277.7
-  → image traitée en 173s (16s/stratégie)
-
-[GPU 6] Terminé — résultats dans outputs/PIE_BENCH_PARALLEL/results_gpu6_chunk5.csv

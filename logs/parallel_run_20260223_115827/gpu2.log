@@ -1,33 +1,0 @@
-[GPU 2] Chunk 1/5 — 140 images (140→279)
-[GPU 2] Chargement SD3-medium (visible=2) …
-Loading pipeline components...:   0%|          | 0/9 [00:00<?, ?it/s]`torch_dtype` is deprecated! Use `dtype` instead!
-Loading pipeline components...:  11%|█         | 1/9 [00:00<00:01,  6.36it/s]Loading pipeline components...:  22%|██▏       | 2/9 [00:00<00:00,  7.09it/s]Loading pipeline components...:  56%|█████▌    | 5/9 [00:00<00:00,  8.13it/s]You set `add_prefix_space`. The tokenizer needs to be converted from the slow tokenizers
-Loading pipeline components...:  78%|███████▊  | 7/9 [00:00<00:00,  9.43it/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s][A
-Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 11.23it/s][ALoading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00, 11.21it/s]
-Loading pipeline components...:  89%|████████▉ | 8/9 [00:01<00:00,  7.80it/s]Loading pipeline components...: 100%|██████████| 9/9 [00:01<00:00,  8.70it/s]
-Traceback (most recent call last):
-  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 462, in <module>
-    main()
-  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 390, in main
-    pipe      = Pipeline()
-  File "/shared/ssd_14T/home/ahmadou/FlowEdit/benchmark_parallel.py", line 305, in __init__
-    ).to("cuda:0")
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/diffusers/pipelines/pipeline_utils.py", line 541, in to
-    module.to(device, dtype)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/transformers/modeling_utils.py", line 4343, in to
-    return super().to(*args, **kwargs)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1343, in to
-    return self._apply(convert)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
-    module._apply(fn)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
-    module._apply(fn)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 903, in _apply
-    module._apply(fn)
-  [Previous line repeated 4 more times]
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 930, in _apply
-    param_applied = fn(param)
-  File "/shared/ssd_14T/home/ahmadou/miniconda3/envs/pytorch_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1329, in convert
-    return t.to(
-torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 32.00 MiB. GPU 0 has a total capacity of 47.37 GiB of which 22.62 MiB is free. Process 796585 has 40.22 GiB memory in use. Including non-PyTorch memory, this process has 7.10 GiB memory in use. Of the allocated memory 6.68 GiB is allocated by PyTorch, and 6.02 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
