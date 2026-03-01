@@ -1,0 +1,20 @@
+# Compiled Python files
+**.pyc
+
+# Example images and results
+src/examples/**/*.jpg
+src/examples/**/*.png
+
+# Dataset images
+dataset/dci_images/*.jpg
+
+# Package metadata
+src/RF_Solver_Editing.egg-info/*
+
+# Additional patterns for nested directories
+src/examples/**/**/*.jpg
+src/examples/**/**/*.png
+src/examples/**/**/**/*.jpg
+src/examples/**/**/**/*.png
+src/examples/**/**/**/**/*.jpg
+src/examples/**/**/**/**/*.png

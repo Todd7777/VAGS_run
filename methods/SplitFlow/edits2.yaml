@@ -1,0 +1,16 @@
+-
+    input_img:  example_images/two_giraffes.jpg
+    source_prompt: Two giraffes standing in tall grass, and trees are at the behind.
+    target_prompts:
+    -  A giraffe and a tiger in a pixar style standing in tall grass, with a glowing lantern hanging.
+-
+    input_img:  example_images/elk.jpg
+    source_prompt: Two elk standing in a clear river surrounded by grassy meadows and distant mountains.
+    target_prompts:
+    -  Two futuristic robotic elk that wear santa cloth standing in snowy riverbank under a soft winter sky surrounded by grassy meadows and distant mountains.
+
+-
+    input_img:  example_images/breakfast.jpg
+    source_prompt: A sunny breakfast scene with avocado scrambled eggs on toast and a cup of coffee, with a fork on the side.
+    target_prompts:
+    -  A sunny breakfast scene with sliced tomato on toast and a soda can, with a spoon on the side.

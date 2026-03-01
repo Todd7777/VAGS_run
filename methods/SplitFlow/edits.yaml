@@ -1,0 +1,23 @@
+-
+    input_img:  example_images/gas_station.png
+    source_prompt: A gas station with a white and red sign that reads "CAFE" There are several cars parked in front of the gas station including a white car and a van.
+    target_prompts:
+    -  A gas station with a white and red sign that reads "SplitFlow" There are several cars parked in front of the gas station including a white car ,a van, and a yellow car.]
+
+-
+    input_img:  example_images/sheeps.jpg
+    source_prompt: A group of sheep stands on a green meadow with a lake and mountains in the background
+    target_prompts:
+    -  Three dogs with sunglasses stands on a green meadow with a lake and snowy mountains in the background. The sky is covered with cloud.
+-
+    input_img:  example_images/three_giraffes.jpg
+    source_prompt: Three giraffes walk in a line through a lush, zoo-like forest path, while another animal rests near a pond.
+    target_prompts:
+    -  Three elephants walk in a line through a lush, zoo-like forest path, while a tiger rests near a pond.
+
+
+-
+    input_img:  example_images/pinkballoon.jpg
+    source_prompt: A pink balloon, an umbrella, a blue suitcase, and a orange bag with grass rest against a mossy wall.
+    target_prompts:
+    -  A red balloon, a wooden stick, a wooden suitcase, and a orange bag with flower rest against a mossy wall.

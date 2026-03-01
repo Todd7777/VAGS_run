@@ -1,0 +1,13 @@
+CUDA_VISIBLE_DEVICES=7 python edit.py  --source_prompt "" \
+                --target_prompt "a cartoon style Sir Charles Chaplin raising his left hand " \
+                --guidance 2 \
+                --source_img_dir 'examples/source/cartoon.jpg' \
+                --num_steps 10 \
+                --inject 1 \
+                --name 'flux-dev' \
+                --start_layer_index 0 \
+                --end_layer_index 37 \
+                --sampling_strategy 'fireflow' \
+                --output_prefix 'fireflow' \
+                --offload \
+                --output_dir 'examples/edit-result/cartoon/' 
