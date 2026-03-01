@@ -300,6 +300,42 @@ def run_flowedit(pairs: List[Dict], gpu_id: int, out_dir: Path):
     scheduler = pipe.scheduler
     evaluator = MetricsEvaluator(device)
 
+    # Patch FluxPipeline to fix FlowEditFLUX's factor-of-2 error in orig_height/orig_width.
+    # FlowEditFLUX computes: orig = latent_dim * vae_scale_factor // 2  (missing factor of 2)
+    # This causes wrong image-ID counts in prepare_latents and wrong unpacking in _unpack_latents.
+    # Fix: derive image IDs directly from actual latent shape; auto-correct unpack dimensions.
+    import types as _t
+    from diffusers import FluxPipeline as _FluxPipeline
+
+    _orig_prepare_latents = _FluxPipeline.prepare_latents
+    def _fixed_prepare_latents(self, batch_size, num_channels_latents,
+                                height, width, dtype, device, generator,
+                                latents=None):
+        if latents is not None:
+            H, W = latents.shape[2], latents.shape[3]
+            lat_ids = self._prepare_latent_image_ids(batch_size, H // 2, W // 2, device, dtype)
+            return latents.to(device=device, dtype=dtype), lat_ids
+        return _orig_prepare_latents(self, batch_size, num_channels_latents,
+                                     height, width, dtype, device, generator, latents)
+
+    _orig_unpack_latents = _FluxPipeline._unpack_latents
+    @staticmethod
+    def _fixed_unpack_latents(latents, height, width, vae_scale_factor):
+        batch_size, num_patches, channels = latents.shape
+        # Detect factor-of-2 under-estimate and correct it
+        h = 2 * (int(height) // (vae_scale_factor * 2))
+        w = 2 * (int(width)  // (vae_scale_factor * 2))
+        if (h // 2) * (w // 2) != num_patches:
+            h = 2 * (int(height * 2) // (vae_scale_factor * 2))
+            w = 2 * (int(width * 2)  // (vae_scale_factor * 2))
+        latents = latents.view(batch_size, h // 2, w // 2, channels // 4, 2, 2)
+        latents = latents.permute(0, 3, 1, 4, 2, 5)
+        latents = latents.reshape(batch_size, channels // 4, h, w)
+        return latents
+
+    _FluxPipeline.prepare_latents  = _fixed_prepare_latents
+    _FluxPipeline._unpack_latents  = _fixed_unpack_latents
+
     rows = []
     for pair in tqdm(pairs, desc="FlowEdit"):
         try:
@@ -1615,6 +1651,8 @@ def run_irfds_sd35(pairs: List[Dict], gpu_id: int, out_dir: Path):
     irfds_root = str(METHODS_ROOT / "rectified_flow_prior")
     if irfds_root not in sys.path:
         sys.path.insert(0, irfds_root)
+    # threestudio reads load/prompt_library.json relative to CWD
+    os.chdir(irfds_root)
 
     import types as _types, builtins as _bi
     _C_EXT_STUBS = {"tinycudann", "igl", "envlight", "nvdiffrast", "nerfacc",
@@ -1660,8 +1698,12 @@ def run_irfds_sd35(pairs: List[Dict], gpu_id: int, out_dir: Path):
     import torchvision.transforms as T
 
     SD35_MODEL = "stabilityai/stable-diffusion-3.5-large"
+    # Use CPU offload: T5-XXL alone is ~22GB; keeping it on GPU alongside the
+    # guidance model (~27GB peak during init) would exceed 47GB VRAM.
+    # enable_model_cpu_offload automatically manages GPU placement per-call.
     pipe_sd3 = StableDiffusion3Pipeline.from_pretrained(
-        SD35_MODEL, torch_dtype=torch.float16).to(device)
+        SD35_MODEL, torch_dtype=torch.float16)
+    pipe_sd3.enable_model_cpu_offload(gpu_id=0)
     pipe_sd3.set_progress_bar_config(disable=True)
 
     guidance_cfg = {

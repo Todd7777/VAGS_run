@@ -20,6 +20,9 @@ Data/flowedit_data/
 !Data/dataset.csv
 !example_images/
 
+# Model weights (too large for git)
+models/
+
 # Scripts not part of the public release
 benchmark_final.py
 benchmark_mini_batch.py
@@ -43,3 +46,21 @@ run_pie_bench_sota.py
 run_sign_flip_optimization.py
 utils.py
 check_setup.sh
+
+# Experiment scripts
+schedulers.py
+run_scheduler_ablation.py
+run_hypertuning.py
+run_gridsearch.py
+run_cagtR_search.py
+run_S6b_S7b.py
+run_metrics_when_ready.py
+rerun_after_rf.py
+rerun_flowedit_flux.py
+rerun_irfds.py
+rerun_missing_methods.py
+rerun_splitflow.py
+benchmark_subset.py
+eval_pie_parallel.py
+summarize_all_benchmarks.py
+subset_pairs.json
