@@ -9,8 +9,8 @@
 #   ./launch_parallel.sh --test    # 2 images par GPU
 # ══════════════════════════════════════════════════════════════════════════════
 
-GPUS=(1 2 3 4 7)  # GPUs 5 et 6 occupés par zhou
-NUM_CHUNKS=5
+GPUS=(0 1 2 3 4 5 6 7)  # All 8 H200 GPUs
+NUM_CHUNKS=8
 EXTRA_ARGS=""
 
 if [[ "$1" == "--test" ]]; then
@@ -48,7 +48,7 @@ echo ""
 echo "PIDs : ${PIDS[*]}"
 echo ""
 echo "Suivre en direct :"
-echo "  tail -f $LOG_DIR/gpu1.log"
+echo "  tail -f $LOG_DIR/gpu0.log"
 echo "  tail -f $LOG_DIR/gpu*.log"
 echo ""
 
