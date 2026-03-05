@@ -36,12 +36,14 @@ import modal
 from pathlib import Path
 
 # ── Volumes (persistent across runs) ─────────────────────────────────────────
-model_vol   = modal.Volume.from_name("vags-models",  create_if_missing=True)
-output_vol  = modal.Volume.from_name("vags-outputs", create_if_missing=True)
+model_vol   = modal.Volume.from_name("sd35-weights",  create_if_missing=True)
+output_vol  = modal.Volume.from_name("sweep-results", create_if_missing=True)
+data_vol    = modal.Volume.from_name("vags-data",     create_if_missing=True)
 
 MODELS_PATH  = Path("/models")
 OUTPUTS_PATH = Path("/outputs")
 CODE_PATH    = Path("/vags")
+DATA_PATH    = Path("/data")
 
 # ── Container image ───────────────────────────────────────────────────────────
 # Built once and cached by Modal — subsequent runs start instantly.
@@ -61,18 +63,19 @@ image = (
         # Diffusion / HF stack
         "diffusers==0.35.2",
         "transformers==4.57.1",
-        "accelerate==1.0.1",
-        "huggingface-hub==0.36.0",
-        "safetensors==0.6.2",
-        "tokenizers==0.22.1",
-        "sentencepiece==0.2.1",
-        "peft==0.12.0",
+        "accelerate>=1.0.1",
+        "huggingface-hub>=0.36.0",
+        "safetensors>=0.4.5",
+        "tokenizers>=0.21.0",
+        "sentencepiece>=0.2.0",
+        "peft>=0.17.0",
         # Metrics
         "lpips==0.1.4",
         "clean-fid==0.1.35",
         "dreamsim==0.2.1",
-        "open-clip-torch==3.3.0",
-        "clip @ git+https://github.com/openai/CLIP.git",
+        "open-clip-torch>=2.24.0",
+        "ftfy",
+        "regex",
         # Utils
         "einops==0.8.2",
         "jaxtyping==0.3.9",
@@ -87,47 +90,48 @@ image = (
         "pillow",
         "numpy",
         "invisible-watermark",
-        "timm==1.0.3",
+        "timm>=1.0.17",
         "monai==1.3.2",
         "psutil",
         "packaging",
         "matplotlib",
-        "ftfy",
-        "regex",
     )
 )
 
 # ── Modal app ─────────────────────────────────────────────────────────────────
-app = modal.App("vags-benchmark", image=image)
-
-# ── Code mount (read-only, ships your local VAGS directory to the container) ──
-vags_mount = modal.Mount.from_local_dir(
+# ── Bundle local VAGS code into the image (Modal 1.x API) ────────────────────
+# add_local_dir copies the directory into the image at build time.
+# Exclude large/generated dirs to keep image lean.
+_EXCLUDE = [
+    "**/__pycache__", "**/*.pyc", "**/.DS_Store",
+    ".git/**", "venv/**", ".venv/**", "env/**",
+    "outputs/**", "results/**", "logs/**",
+    "Data/Images/**", "Data/flowedit_data/**",
+    "models/**",
+]
+image_with_code = image.add_local_dir(
     local_path=".",
     remote_path=str(CODE_PATH),
-    condition=lambda path: not any(
-        skip in path for skip in [
-            "__pycache__", ".git", "venv", ".venv", "env",
-            "outputs/", "results/", "logs/", ".DS_Store",
-            "Data/Images/", "Data/flowedit_data/",
-            "models/",
-        ]
-    ),
+    ignore=_EXCLUDE,
 )
+
+app = modal.App("vags-benchmark", image=image_with_code)
 
 # ── Shared bootstrap helper (runs inside every container) ────────────────────
 
 def _bootstrap():
     """Set paths and HF cache dir inside the container."""
     import sys, os
-    sys.path.insert(0, str(CODE_PATH))
-    sys.path.insert(0, str(CODE_PATH / "methods" / "SplitFlow"))
-    sys.path.insert(0, str(CODE_PATH / "methods" / "FlowEdit"))
+    # Insert in reverse priority: last insert(0,...) wins → CODE_PATH is index 0
+    # so root FlowEdit_utils.py takes precedence over methods/FlowEdit/FlowEdit_utils.py
     sys.path.insert(0, str(CODE_PATH / "methods" / "PnPInversion"))
-    os.environ["HF_HOME"]             = str(MODELS_PATH)
-    os.environ["TRANSFORMERS_CACHE"]  = str(MODELS_PATH)
+    sys.path.insert(0, str(CODE_PATH / "methods" / "FlowEdit"))
+    sys.path.insert(0, str(CODE_PATH / "methods" / "SplitFlow"))
+    sys.path.insert(0, str(CODE_PATH))   # root MUST be first — has the canonical FlowEdit_utils.py
+    os.environ["HF_HOME"]               = str(MODELS_PATH)
+    os.environ["TRANSFORMERS_CACHE"]    = str(MODELS_PATH)
     os.environ["HUGGINGFACE_HUB_CACHE"] = str(MODELS_PATH)
-    # Single GPU per container — always cuda:0
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"]  = "0"
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -140,9 +144,9 @@ def _bootstrap():
     timeout=60 * 60 * 2,           # 2 h — first download can be slow
     volumes={
         str(MODELS_PATH): model_vol,
+        str(DATA_PATH):   data_vol,
     },
-    secrets=[modal.Secret.from_name("huggingface")],
-    mounts=[vags_mount],
+    secrets=[modal.Secret.from_name("huggingface-secret")],
 )
 def download_models():
     import os, torch
@@ -189,9 +193,9 @@ def _run_method(method_name: str, max_pairs: int | None = None):
     bm = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bm)
 
-    # Load PIE-Bench pairs
-    mapping_file = str(CODE_PATH / "Data" / "PIE-Bench_v1" / "mapping_file.json")
-    images_root  = str(CODE_PATH / "Data" / "PIE-Bench_v1" / "annotation_images")
+    # Load PIE-Bench pairs from persistent volume
+    mapping_file = str(DATA_PATH / "PIE-Bench_v1" / "mapping_file.json")
+    images_root  = str(DATA_PATH / "PIE-Bench_v1" / "annotation_images")
     pairs = bm.load_pairs_pie(mapping_file, images_root, max_pairs)
     print(f"[{method_name}] Loaded {len(pairs)} pairs")
 
@@ -223,11 +227,11 @@ def _run_method(method_name: str, max_pairs: int | None = None):
     gpu="H200",
     timeout=60 * 60 * 6,
     volumes={
-        str(MODELS_PATH): model_vol,
+        str(MODELS_PATH):  model_vol,
         str(OUTPUTS_PATH): output_vol,
+        str(DATA_PATH):    data_vol,
     },
-    secrets=[modal.Secret.from_name("huggingface")],
-    mounts=[vags_mount],
+    secrets=[modal.Secret.from_name("huggingface-secret")],
     memory=98304,
 )
 def run_flowedit_cosine(max_pairs: int | None = None):
@@ -238,11 +242,11 @@ def run_flowedit_cosine(max_pairs: int | None = None):
     gpu="H200",
     timeout=60 * 60 * 6,
     volumes={
-        str(MODELS_PATH): model_vol,
+        str(MODELS_PATH):  model_vol,
         str(OUTPUTS_PATH): output_vol,
+        str(DATA_PATH):    data_vol,
     },
-    secrets=[modal.Secret.from_name("huggingface")],
-    mounts=[vags_mount],
+    secrets=[modal.Secret.from_name("huggingface-secret")],
     memory=98304,
 )
 def run_flowedit_relative(max_pairs: int | None = None):
@@ -253,11 +257,11 @@ def run_flowedit_relative(max_pairs: int | None = None):
     gpu="H200",
     timeout=60 * 60 * 6,
     volumes={
-        str(MODELS_PATH): model_vol,
+        str(MODELS_PATH):  model_vol,
         str(OUTPUTS_PATH): output_vol,
+        str(DATA_PATH):    data_vol,
     },
-    secrets=[modal.Secret.from_name("huggingface")],
-    mounts=[vags_mount],
+    secrets=[modal.Secret.from_name("huggingface-secret")],
     memory=98304,
 )
 def run_splitflow_cosine(max_pairs: int | None = None):
@@ -268,11 +272,11 @@ def run_splitflow_cosine(max_pairs: int | None = None):
     gpu="H200",
     timeout=60 * 60 * 6,
     volumes={
-        str(MODELS_PATH): model_vol,
+        str(MODELS_PATH):  model_vol,
         str(OUTPUTS_PATH): output_vol,
+        str(DATA_PATH):    data_vol,
     },
-    secrets=[modal.Secret.from_name("huggingface")],
-    mounts=[vags_mount],
+    secrets=[modal.Secret.from_name("huggingface-secret")],
     memory=98304,
 )
 def run_splitflow_relative(max_pairs: int | None = None):
