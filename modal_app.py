@@ -210,6 +210,7 @@ def _run_method(method_name: str, max_pairs: int | None = None):
         "flowedit_sd35_conflictaware_relative":  bm.run_flowedit_sd35_conflictaware_relative,
         "splitflow_sd35_conflictaware_cosine":   bm.run_splitflow_sd35_conflictaware_cosine,
         "splitflow_sd35_conflictaware_relative": bm.run_splitflow_sd35_conflictaware_relative,
+        "irfds_sd35":                            bm.run_irfds_sd35,
     }
 
     fn = runner_map[method_name]
@@ -283,6 +284,21 @@ def run_splitflow_relative(max_pairs: int | None = None):
     _run_method("splitflow_sd35_conflictaware_relative", max_pairs)
 
 
+@app.function(
+    gpu="H200",
+    timeout=60 * 60 * 12,          # iRFDS runs 1400 iters per image — needs long timeout
+    volumes={
+        str(MODELS_PATH):  model_vol,
+        str(OUTPUTS_PATH): output_vol,
+        str(DATA_PATH):    data_vol,
+    },
+    secrets=[modal.Secret.from_name("huggingface-secret")],
+    memory=98304,
+)
+def run_irfds(max_pairs: int | None = None):
+    _run_method("irfds_sd35", max_pairs)
+
+
 # ═════════════════════════════════════════════════════════════════════════════
 # Entry points — called with `modal run modal_app.py`
 # ═════════════════════════════════════════════════════════════════════════════
@@ -290,38 +306,23 @@ def run_splitflow_relative(max_pairs: int | None = None):
 @app.local_entrypoint()
 def main():
     """
-    Run all 4 proposed methods in parallel, each on its own H200.
+    Run iRFDS on full PIE-Bench (700 pairs) on a single H200.
     modal run modal_app.py
     """
-    print("Launching all 4 methods in parallel on H200 GPUs...")
-    fns = [
-        run_flowedit_cosine,
-        run_flowedit_relative,
-        run_splitflow_cosine,
-        run_splitflow_relative,
-    ]
-    # .spawn() submits all 4 to Modal simultaneously (true parallelism)
-    handles = [fn.spawn() for fn in fns]
-    print(f"All 4 jobs submitted. Waiting for results...")
-    for h in handles:
-        h.get()
-    print("All methods complete. Download results with:")
-    print("  modal volume get vags-outputs /")
+    print("Launching iRFDS on H200 (full PIE-Bench)...")
+    handle = run_irfds.spawn()
+    print("iRFDS job submitted. Waiting for completion...")
+    handle.get()
+    print("iRFDS complete. Download results with:")
+    print("  python modal_download_results.py")
 
 
 @app.local_entrypoint()
 def run_test():
     """
-    Smoke test: 4 pairs per method, all 4 methods in parallel.
+    Smoke test: 4 pairs for iRFDS.
     modal run modal_app.py::run_test
     """
-    print("TEST MODE — 4 pairs per method...")
-    handles = [
-        run_flowedit_cosine.spawn(max_pairs=4),
-        run_flowedit_relative.spawn(max_pairs=4),
-        run_splitflow_cosine.spawn(max_pairs=4),
-        run_splitflow_relative.spawn(max_pairs=4),
-    ]
-    for h in handles:
-        h.get()
+    print("TEST MODE — 4 pairs (iRFDS)...")
+    run_irfds.remote(max_pairs=4)
     print("Test complete.")

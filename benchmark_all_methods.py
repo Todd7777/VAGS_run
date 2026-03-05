@@ -3171,17 +3171,19 @@ _METHOD_NAMES = [
 # ---------- Proposed -----------
 _RUNNERS = [
     # function  default GPU
-    (run_flowedit_sd35_conflictaware_cosine,       0),
-    (run_flowedit_sd35_conflictaware_relative,      1),
-    (run_splitflow_sd35_conflictaware_cosine,       2),
-    (run_splitflow_sd35_conflictaware_relative,     3),
+    # (run_flowedit_sd35_conflictaware_cosine,       0),  # running on colleague's machine
+    # (run_flowedit_sd35_conflictaware_relative,      1),  # running on colleague's machine
+    # (run_splitflow_sd35_conflictaware_cosine,       2),  # running on colleague's machine
+    # (run_splitflow_sd35_conflictaware_relative,     3),  # running on colleague's machine
+    (run_irfds_sd35, 0),
 ]
 
 _METHOD_NAMES = [
-    ["flowedit_sd35_conflictaware_cosine"],
-    ["flowedit_sd35_conflictaware_relative"],
-    ["splitflow_sd35_conflictaware_cosine"],
-    ["splitflow_sd35_conflictaware_relative"],
+    # ["flowedit_sd35_conflictaware_cosine"],
+    # ["flowedit_sd35_conflictaware_relative"],
+    # ["splitflow_sd35_conflictaware_cosine"],
+    # ["splitflow_sd35_conflictaware_relative"],
+    ["irfds_sd35"],
 ]
 
 # ---------- Test -----------
